@@ -1,10 +1,7 @@
 package com.flynow.repository.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class UserEntity {

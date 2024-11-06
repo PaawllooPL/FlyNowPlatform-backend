@@ -1,17 +1,15 @@
 package com.flynow.repository.entities;
 
-import com.flynow.models.RoleEnum;
+import com.flynow.domain.models.RoleEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "roles")
 public class RoleEntity {

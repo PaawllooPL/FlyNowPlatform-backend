@@ -10,3 +10,14 @@ spring:
 logging:
   level:
     sql: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+#jwt:
+#  rsa-private-key: classpath:certs/privateKey.pem
+#  rsa-public-key: classpath:certs/publicKey.pem
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

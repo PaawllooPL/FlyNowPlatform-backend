@@ -1,4 +1,4 @@
-package com.flynow.models;
+package com.flynow.domain.models;
 
 import java.time.Duration;
 import java.util.Date;

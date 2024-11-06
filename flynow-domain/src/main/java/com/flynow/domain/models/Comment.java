@@ -1,5 +1,8 @@
-package com.flynow.models;
+package com.flynow.domain.models;
 
+import lombok.Builder;
+
+@Builder
 public class Comment {
 
     private Integer rating;
