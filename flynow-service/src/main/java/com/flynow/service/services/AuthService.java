@@ -3,6 +3,7 @@ package com.flynow.service.services;
 import com.flynow.domain.models.Role;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
+import com.flynow.repository.entities.RoleEntity;
 import com.flynow.repository.entities.UserEntity;
 import com.flynow.repository.repositories.jpa.RoleJpaRepository;
 import com.flynow.repository.repositories.jpa.UserJpaRepository;
@@ -13,12 +14,16 @@ import com.flynow.service.models.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -30,14 +35,22 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Transactional
     public AuthenticationResponse register(User user) {
-        var entityRoles = roleJpaRepository.findAllByNameIn(user.getRoles());
+        logger.debug("Finding roles ...");
+        List<RoleEntity> entityRoles =
+                !user.getRoles().isEmpty() ? roleJpaRepository.findAllByNameIn(user.getRoles()) : new ArrayList<>();
+
+        logger.debug("Found {} roles", entityRoles.size());
+        for(var role : entityRoles) {
+            logger.debug("Role: {}", role.getName());
+        }
         UserEntity userEntity = userMapper.toEntityWithExistingRoles(user, entityRoles);
-
+        logger.debug("Mapped userEntity: {}, {}, {}, {}, first role: {}", userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getPasswordHash(), userEntity.getAccountRoles().get(0).getName());
         userJpaRepository.save(userEntity);
-
+        logger.debug("Saved userEntity");
         var userDetails = new UserDetailsImpl(userEntity);
         var jwtToken = jwtService.generateToken(userDetails);
         var refreshToken = jwtService.generateRefresh(new HashMap<>(), userDetails);
@@ -76,6 +89,7 @@ public class AuthService {
     }
 
     public Boolean validateToken(String token) {
+        logger.debug("AuthService calling jwtService.validateToken(token)");
         return jwtService.validateToken(token);
     }
 }

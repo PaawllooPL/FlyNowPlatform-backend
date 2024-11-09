@@ -5,10 +5,11 @@ spring:
     password: postgres
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 logging:
   level:
+    com.flynow: DEBUG
     sql: debug
 management:
   endpoints:

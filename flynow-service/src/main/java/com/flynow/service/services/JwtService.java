@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.type.descriptor.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,9 @@ import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
 
+@RequiredArgsConstructor
 public class JwtService {
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secretKey}")
     private String SECRET_KEY;
@@ -85,6 +87,7 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token) {
+
         String userEmail = extractUserName(token);//todo extract userEmail from jwt Token
         if (StringUtils.isNotEmpty(userEmail) && !isTokenExpired(token)) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);

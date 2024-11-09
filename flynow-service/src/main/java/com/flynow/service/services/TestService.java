@@ -1,20 +1,40 @@
 package com.flynow.service.services;
 
 import com.flynow.domain.models.Company;
+import com.flynow.domain.models.Role;
+import com.flynow.domain.models.RoleEnum;
+import com.flynow.domain.models.User;
 import com.flynow.repository.entities.CompanyEntity;
+import com.flynow.repository.entities.RoleEntity;
 import com.flynow.repository.repositories.jpa.CommentJpaRepository;
 import com.flynow.repository.repositories.jpa.CompanyJpaRepository;
+import com.flynow.repository.repositories.jpa.RoleJpaRepository;
+import com.flynow.repository.repositories.jpa.UserJpaRepository;
 import com.flynow.service.mappers.CompanyMapper;
+import com.flynow.service.mappers.RoleMapper;
+import com.flynow.service.mappers.UserMapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+@RequiredArgsConstructor
 public class TestService {
-    private CommentJpaRepository commentJpaRepository;
-    private CompanyJpaRepository companyJpaRepository;
-    private CompanyMapper companyMapper;
+
+    private final CommentJpaRepository commentJpaRepository;
+    private final CompanyJpaRepository companyJpaRepository;
+    private final RoleJpaRepository roleJpaRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final CompanyMapper companyMapper;
+    private final RoleMapper roleMapper;
+    private final UserMapper userMapper;
+    private final Logger logger = LoggerFactory.getLogger(TestService.class);
 
     public Company CreateCompany(Company company) {
-        CompanyEntity companyEntity =  companyJpaRepository.findByName(company.getName())
+        CompanyEntity companyEntity = companyJpaRepository.findByName(company.getName())
                 .orElseThrow(() -> new RuntimeException(String.format("Company by name %s already exists", company.getName())));
 
         CompanyEntity newCompanyEntity = CompanyEntity.builder()
@@ -28,4 +48,23 @@ public class TestService {
         return companyMapper.toCompany(savedEntity);
     }
 
+    public void CreateRoles(List<RoleEnum> roles) {
+
+        List<RoleEntity> entityRoles = roles.stream().map(RoleMapper::toEntity).toList();
+        for (RoleEntity role : entityRoles) {
+            if (roleJpaRepository.findByName(role.getName()).isEmpty()) {
+                roleJpaRepository.save(role);
+                logger.debug("Saved Role: {}", role.getName());
+            }
+        }
+    }
+
+    public void CreateUsers(List<User> users) {
+        for (User user : users) {
+            var entityRoles =
+                    !user.getRoles().isEmpty() ? roleJpaRepository.findAllByNameIn(user.getRoles()) : new ArrayList<RoleEntity>();
+            var entityUser = userMapper.toEntityWithExistingRoles(user, entityRoles);
+            userJpaRepository.save(entityUser);
+        }
+    }
 }

@@ -7,8 +7,10 @@ import com.flynow.repository.entities.RoleEntity;
 import com.flynow.repository.entities.UserEntity;
 import com.flynow.repository.repositories.jpa.RoleJpaRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.id.factory.internal.AutoGenerationTypeStrategy;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

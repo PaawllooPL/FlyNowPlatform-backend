@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor(staticName = "of")
 @Builder
 public class Company {
+    private User organizer;
     private String name;
     private String tin;    //TIN - english version of polish NIP
     private String address;

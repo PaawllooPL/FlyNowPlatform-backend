@@ -1,5 +1,6 @@
 package com.flynow.api.config.security;
 
+import com.flynow.api.ApiPathSegments;
 import com.flynow.api.config.security.jwt.JwtAuthenticationFilter;
 import com.flynow.domain.models.RoleEnum;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class SecurityConfig {
             "/actuator/**"
             // other public endpoints of your API may be appended to this array
     };
+    private static final String ALL = "/**";
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -38,8 +40,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/authentication/**").permitAll()
-                        .requestMatchers("/api/test/auth-test").hasAuthority(RoleEnum.user.name())
-                        .requestMatchers("/api/test/create-data").permitAll()
+                        .requestMatchers("/api/v1/auth-test").hasAuthority(RoleEnum.user.name())
+                        .requestMatchers(ApiPathSegments.BASE_PATH+ApiPathSegments.TEST_CREATE_DATA+ALL).permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
 //                        .anyRequest().permitAll()
 //                        .anyRequest().authenticated()
