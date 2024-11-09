@@ -7,6 +7,7 @@ import com.flynow.domain.models.User;
 import com.flynow.repository.entities.RoleEntity;
 import com.flynow.repository.repositories.jpa.RoleJpaRepository;
 import com.flynow.repository.repositories.jpa.UserJpaRepository;
+import com.flynow.service.exceptions.InsufficientPermissionsException;
 import com.flynow.service.mappers.RoleMapper;
 import com.flynow.service.models.AuthenticationResponse;
 import com.flynow.service.services.TestService;
@@ -88,14 +89,15 @@ public class TestController {
     }
     @GetMapping(ApiPathSegments.TEST_CREATE_ALL_URL)
     public ResponseEntity<String> testCreateAll() {
-        try {
-            var restTemplate = new RestTemplate();
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_ROLES_URL, String.class);
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_USERS_URL, String.class);
-        } catch (Exception e) {
-            logger.error("Creating data failed: {}", e.getMessage());
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        throw new InsufficientPermissionsException();
+//        try {
+//            var restTemplate = new RestTemplate();
+//            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_ROLES_URL, String.class);
+//            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_USERS_URL, String.class);
+//        } catch (Exception e) {
+//            logger.error("Creating data failed: {}", e.getMessage());
+//            return ResponseEntity.internalServerError().body(e.getMessage());
+//        }
 
 
         return ResponseEntity.ok().body("Created all data");
