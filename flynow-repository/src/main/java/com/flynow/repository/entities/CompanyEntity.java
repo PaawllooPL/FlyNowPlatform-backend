@@ -16,9 +16,10 @@ import java.util.List;
 @Builder
 public class CompanyEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -27,7 +28,7 @@ public class CompanyEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.RESTRICT)
     private UserEntity organizerAccount;

@@ -23,16 +23,18 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+import static com.flynow.api.ApiPathSegments.*;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/authentication")
+@RequestMapping(BASE_PATH+AUTHENTICATION)
 public class AuthenticationController {
 
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @PostMapping("/register")
+    @PostMapping(AUTHENTICATION_REGISTER)
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody final RegisterUserDTO registerUserDTO) {
         try {
@@ -71,7 +73,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @PostMapping("/authenticate")
+    @PostMapping(AUTHENTICATION_LOGIN)
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             AuthenticationResponse res = authService.authenticate(authenticationRequest);

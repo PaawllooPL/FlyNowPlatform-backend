@@ -25,4 +25,12 @@ public class UserMapper {
                 .accountRoles(roleEntities)
                 .build();
     }
+    public static User toDomain(UserEntity userEntity) {
+        return User.builder()
+                .username(userEntity.getUsername())
+                .email(userEntity.getEmail())
+                .passwordHash(userEntity.getPasswordHash())
+                .roles(userEntity.getAccountRoles().stream().map(RoleMapper::toDomain).toList())
+                .build();
+    }
 }

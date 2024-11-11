@@ -1,13 +1,10 @@
 package com.flynow.api.config.beans
 
-import com.flynow.service.services.UserDetailsServiceImpl
 import com.flynow.service.mappers.CommentMapper
 import com.flynow.service.mappers.CompanyMapper
 import com.flynow.service.mappers.RoleMapper
 import com.flynow.service.mappers.UserMapper
-import com.flynow.service.services.AuthService
-import com.flynow.service.services.JwtService
-import com.flynow.service.services.TestService
+import com.flynow.service.services.*
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
@@ -28,5 +25,6 @@ val beans = beans {
     bean<JwtService>()
     bean<AuthService>()
     bean<UserDetailsServiceImpl>()
+    bean<CompanyServiceImpl>()
 
 }

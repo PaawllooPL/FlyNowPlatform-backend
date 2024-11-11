@@ -1,22 +1,20 @@
 package com.flynow.service.services;
 
+import com.flynow.domain.models.AircraftType;
 import com.flynow.domain.models.Company;
-import com.flynow.domain.models.Role;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
 import com.flynow.repository.entities.CompanyEntity;
 import com.flynow.repository.entities.RoleEntity;
-import com.flynow.repository.repositories.jpa.CommentJpaRepository;
-import com.flynow.repository.repositories.jpa.CompanyJpaRepository;
-import com.flynow.repository.repositories.jpa.RoleJpaRepository;
-import com.flynow.repository.repositories.jpa.UserJpaRepository;
+import com.flynow.repository.repositories.jpa.*;
+import com.flynow.service.mappers.AircraftTypeMapper;
 import com.flynow.service.mappers.CompanyMapper;
 import com.flynow.service.mappers.RoleMapper;
 import com.flynow.service.mappers.UserMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +26,13 @@ public class TestService {
     private final CompanyJpaRepository companyJpaRepository;
     private final RoleJpaRepository roleJpaRepository;
     private final UserJpaRepository userJpaRepository;
+    private final AircraftTypeJpaRepository aircraftTypeJpaRepository;
     private final CompanyMapper companyMapper;
     private final RoleMapper roleMapper;
     private final UserMapper userMapper;
     private final Logger logger = LoggerFactory.getLogger(TestService.class);
 
+    @Transactional
     public Company CreateCompany(Company company) {
         CompanyEntity companyEntity = companyJpaRepository.findByName(company.getName())
                 .orElseThrow(() -> new RuntimeException(String.format("Company by name %s already exists", company.getName())));
@@ -45,9 +45,9 @@ public class TestService {
 
         CompanyEntity savedEntity = companyJpaRepository.save(newCompanyEntity);
 
-        return companyMapper.toCompany(savedEntity);
+        return companyMapper.toDomain(savedEntity);
     }
-
+    @Transactional
     public void CreateRoles(List<RoleEnum> roles) {
 
         List<RoleEntity> entityRoles = roles.stream().map(RoleMapper::toEntity).toList();
@@ -58,7 +58,7 @@ public class TestService {
             }
         }
     }
-
+    @Transactional
     public void CreateUsers(List<User> users) {
         for (User user : users) {
             var entityRoles =
@@ -66,5 +66,10 @@ public class TestService {
             var entityUser = userMapper.toEntityWithExistingRoles(user, entityRoles);
             userJpaRepository.save(entityUser);
         }
+    }
+    @Transactional
+    public void CreateAircraftTypes(List<AircraftType> aircraftTypes) {
+        aircraftTypeJpaRepository.saveAll(
+                aircraftTypes.stream().map(AircraftTypeMapper::toEntity).toList());
     }
 }

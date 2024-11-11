@@ -13,4 +13,7 @@ public class RoleMapper {
     public static RoleEntity toEntity(Role role) {
         return RoleEntity.of(null, role.getName());
     }
+    public static RoleEnum toDomain(RoleEntity roleEntity) {
+        return RoleEnum.valueOf(roleEntity.getName().toString());
+    }
 }

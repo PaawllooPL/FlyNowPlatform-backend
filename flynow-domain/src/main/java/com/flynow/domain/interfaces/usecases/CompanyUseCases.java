@@ -1,7 +1,9 @@
 package com.flynow.domain.interfaces.usecases;
 
+import com.flynow.domain.models.Comment;
 import com.flynow.domain.models.Company;
 
 public interface CompanyUseCases {
-    Company createCompany (Company company);
+    void createCompany (Company company, String organizerEmail);
+    Comment addComment (Integer companyId, Integer userId, Comment comment);
 }
