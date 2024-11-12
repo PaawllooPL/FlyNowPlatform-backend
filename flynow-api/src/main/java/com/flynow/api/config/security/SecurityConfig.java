@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(BASE_PATH + AUTHENTICATION + ALL_PATHS).permitAll()
-                        .requestMatchers("/api/v1/auth-test").hasAuthority(RoleEnum.user.name())
+                        .requestMatchers(BASE_PATH + AUTHENTICATION_TEST).hasAuthority(RoleEnum.user.name())
                         .requestMatchers(BASE_PATH + TEST_CREATE_DATA + ALL_PATHS).permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
 //                        .anyRequest().permitAll()

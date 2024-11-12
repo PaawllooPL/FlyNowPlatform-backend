@@ -26,5 +26,5 @@ val beans = beans {
     bean<AuthService>()
     bean<UserDetailsServiceImpl>()
     bean<CompanyServiceImpl>()
-
+    bean<ImageService>() //depends on future flight service
 }

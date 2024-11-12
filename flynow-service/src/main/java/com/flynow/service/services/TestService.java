@@ -6,16 +6,24 @@ import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
 import com.flynow.repository.entities.CompanyEntity;
 import com.flynow.repository.entities.RoleEntity;
+import com.flynow.repository.entities.UserEntity;
 import com.flynow.repository.repositories.jpa.*;
+import com.flynow.service.exceptions.UserNotFoundException;
 import com.flynow.service.mappers.AircraftTypeMapper;
 import com.flynow.service.mappers.CompanyMapper;
 import com.flynow.service.mappers.RoleMapper;
 import com.flynow.service.mappers.UserMapper;
+import com.flynow.service.models.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,25 +35,26 @@ public class TestService {
     private final RoleJpaRepository roleJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final AircraftTypeJpaRepository aircraftTypeJpaRepository;
-    private final CompanyMapper companyMapper;
-    private final RoleMapper roleMapper;
     private final UserMapper userMapper;
     private final Logger logger = LoggerFactory.getLogger(TestService.class);
+    private final ImageService imageService;
 
     @Transactional
-    public Company CreateCompany(Company company) {
-        CompanyEntity companyEntity = companyJpaRepository.findByName(company.getName())
-                .orElseThrow(() -> new RuntimeException(String.format("Company by name %s already exists", company.getName())));
-
+    public Company CreateCompany(Company company, Integer organizerId) {
+        UserEntity organizerEntity = userJpaRepository.findById(organizerId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        
         CompanyEntity newCompanyEntity = CompanyEntity.builder()
                 .name("testowa firma")
                 .tin("19999999999999")
                 .address("Katowice Ogrodowa 15")
+                .organizerAccount(organizerEntity)
+                .comments(List.of())
                 .build();
 
         CompanyEntity savedEntity = companyJpaRepository.save(newCompanyEntity);
 
-        return companyMapper.toDomain(savedEntity);
+        return CompanyMapper.toDomain(savedEntity);
     }
     @Transactional
     public void CreateRoles(List<RoleEnum> roles) {
@@ -71,5 +80,11 @@ public class TestService {
     public void CreateAircraftTypes(List<AircraftType> aircraftTypes) {
         aircraftTypeJpaRepository.saveAll(
                 aircraftTypes.stream().map(AircraftTypeMapper::toEntity).toList());
+    }
+
+    @Transactional
+    public void SaveImage(MultipartFile file) throws IOException {
+        String fileName = imageService.saveImageToStorage(file);
+        logger.debug("Image saved to storage: {}", fileName);
     }
 }

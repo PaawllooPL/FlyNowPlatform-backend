@@ -33,7 +33,7 @@ public class CompanyEntity {
     @OnDelete(action = OnDeleteAction.RESTRICT)
     private UserEntity organizerAccount;
 
-    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     private List<CommentEntity> comments;
 }

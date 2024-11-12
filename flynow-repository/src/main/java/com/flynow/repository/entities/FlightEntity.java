@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Length;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,16 +24,22 @@ import java.util.List;
 public class FlightEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private Date flightDate;
+    private LocalDateTime flightDate;
 
-    private Duration flightDuration;
+    @Column(length = 3)
+    private Integer duration;
 
     @Column(nullable = false)
     private Integer pricePerPerson;
 
+    @Column(nullable = false)
+    private Integer availableSeats;
+
+    @Column(length = 1000)
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)

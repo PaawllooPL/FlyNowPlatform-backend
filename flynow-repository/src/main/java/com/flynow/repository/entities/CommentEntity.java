@@ -16,9 +16,9 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
     private Integer rating;
 
+    @Column(length = 255)
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)

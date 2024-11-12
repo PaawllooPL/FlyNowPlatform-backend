@@ -17,6 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class UserFlightEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne()
@@ -25,5 +26,5 @@ public class UserFlightEntity {
     private UserEntity user;
 
     @Column(nullable = false)
-    private String didComment;
+    private Boolean didComment;
 }
