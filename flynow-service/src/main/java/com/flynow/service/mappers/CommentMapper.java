@@ -7,6 +7,8 @@ import com.flynow.repository.entities.UserEntity;
 public class CommentMapper {
     public static Comment toDomain(CommentEntity commentEntity) {
         return Comment.builder()
+                .userId(commentEntity.getCommentCreator().getId())
+                .username(commentEntity.getCommentCreator().getUsername())
                 .rating(commentEntity.getRating())
                 .content(commentEntity.getContent())
                 .build();

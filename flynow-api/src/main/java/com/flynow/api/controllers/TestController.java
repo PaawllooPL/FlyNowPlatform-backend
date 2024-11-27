@@ -6,13 +6,12 @@ import com.flynow.api.dto.comment.CommentDTO;
 import com.flynow.api.dto.company.CreateCompanyDTO;
 import com.flynow.api.dto.offer.CreateOfferDTO;
 import com.flynow.api.dto.user.RegisterUserDTO;
+import com.flynow.domain.interfaces.usecases.CommentUseCases;
 import com.flynow.domain.interfaces.usecases.CompanyUseCases;
+import com.flynow.domain.interfaces.usecases.UserUseCases;
 import com.flynow.domain.models.*;
 import com.flynow.repository.entities.*;
-import com.flynow.repository.repositories.jpa.AircraftTypeJpaRepository;
-import com.flynow.repository.repositories.jpa.CompanyJpaRepository;
-import com.flynow.repository.repositories.jpa.RoleJpaRepository;
-import com.flynow.repository.repositories.jpa.UserJpaRepository;
+import com.flynow.repository.repositories.jpa.*;
 import com.flynow.service.exceptions.InsufficientPermissionsException;
 import com.flynow.service.exceptions.UserNotFoundException;
 import com.flynow.service.mappers.AircraftTypeMapper;
@@ -50,7 +49,7 @@ import static com.flynow.api.ApiPathSegments.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(BASE_PATH)
+@RequestMapping(BASE_PATH + TEST)
 public class TestController {
 
     private final Logger logger = LoggerFactory.getLogger(TestController.class);
@@ -62,6 +61,9 @@ public class TestController {
     private final ImageService imageService;
     private final CompanyJpaRepository companyJpaRepository;
     private final CompanyUseCases companyUseCases;
+    private final CommentUseCases commentUseCases;
+    private final UserUseCases userUseCases;
+    private final FlightJpaRepository flightJpaRepository;
 
     @PostMapping()
     public ResponseEntity<String> testPost() {
@@ -140,32 +142,53 @@ public class TestController {
 
         var flights = List.of(
                 FlightEntity.of(null, LocalDateTime.now().plusWeeks(2), 120, 399, 4,
-                        "opis opis opis lorem ipsum", company, List.of(), awionetka_type,
+                        "Opis zdjecie1","opis opis opis lorem ipsum", "Lotnisko Katowice Długa 68", company, List.of(), awionetka_type,
                         FlightPictureEntity.of(null, "zdjecie_1.jpg")),
                 FlightEntity.of(null, LocalDateTime.now().plusWeeks(1), 60, 199, 4,
-                        "opis opis opis lorem ipsum", company, List.of(), awionetka_type,
+                        "Opis zdjecie2","opis opis opis lorem ipsum", "Lotnisko Warszawa Krótka 17", company, List.of(), awionetka_type,
                         FlightPictureEntity.of(null, "zdjecie_2.jpg")),
                 FlightEntity.of(null, LocalDateTime.now().minusWeeks(1), 60, 99, 2,
-                        "opis opis opis lorem ipsum", company,
-                        List.of(UserFlightEntity.of(null, user_commented, true),
+                        "Opis zdjecie3","opis opis opis lorem ipsum",  "Lotnisko Dubaj Alsheirk 28", company,
+                        List.of(UserFlightEntity.of(null, user_commented, false),
                                 UserFlightEntity.of(null, user_not_commented, false)),
                         helikopter_type, FlightPictureEntity.of(null, "zdjecie_3.jpg")));
+
+        flightJpaRepository.saveAll(flights);
+        return ResponseEntity.ok().body("Created flights");
     }
 
 
-//    @GetMapping(TEST_CREATE_COMMENTS_URL)
-//    public ResponseEntity<String> testCreateComments() {
-//        userJpaRepository.findByEmail("kacper@gmail.com");
-//    }
+    @GetMapping(TEST_CREATE_COMMENTS_URL)
+    public ResponseEntity<String> testCreateComments() {
+        var aboutToCommentUser = userJpaRepository.findByEmail("kacper@gmail.com").get();
+        var flight = flightJpaRepository.findById(3).get();
+        flight.getCompany().getComments().add(CommentEntity.of(null, 4, "piekne widoki i wgl super", aboutToCommentUser));
+        flight.getJunctionClients().stream()
+                .filter(userFlight -> userFlight.getUser().getId().equals(aboutToCommentUser.getId()))
+                .findFirst().get().setDidComment(true);
+
+        flightJpaRepository.save(flight);
+        return ResponseEntity.ok().body(String.format("Created comment for %s", aboutToCommentUser.getEmail()));
+    }
 
     @GetMapping(ApiPathSegments.TEST_CREATE_ALL_URL)
     public ResponseEntity<String> testCreateAll() {
         try {
+            logger.debug("dupa0");
             var restTemplate = new RestTemplate();
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_ROLES_URL, String.class);
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_USERS_URL, String.class);
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_COMPANY_URL, String.class);
-            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+TEST_CREATE_AIRCRAFT_TYPE_URL, String.class);
+            logger.debug("dupa1");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_ROLES_URL, String.class);
+            logger.debug("dupa2");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_USERS_URL, String.class);
+            logger.debug("dupa3");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_COMPANY_URL, String.class);
+            logger.debug("dupa4");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_AIRCRAFT_TYPE_URL, String.class);
+            logger.debug("dupa5");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_FLIGHT_URL, String.class);
+            logger.debug("dupa6");
+            restTemplate.getForEntity(ABSOLUTE_BASE_PATH+ TEST + TEST_CREATE_COMMENTS_URL, String.class);
+            logger.debug("dupa7");
         } catch (Exception e) {
             logger.error("Creating data failed: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -182,7 +205,7 @@ public class TestController {
         logger.error("Comment rating: {}", addCommentDTO.getRating());
         logger.error("Comment content: {}", addCommentDTO.getContent());
 
-        Comment comment = companyUseCases.addComment(addCommentDTO.getCompanyId(),
+        Comment comment = commentUseCases.addComment(addCommentDTO.getCompanyId(),
                 userDetails.getUserEntity().getId(),addCommentDTO.toDomainComment());
 
         CommentDTO commentDTO = CommentDTO.of(userDetails.getUserEntity().getId(),
@@ -193,11 +216,19 @@ public class TestController {
     @PostMapping(value = TEST_CREATE_DATA+"/add-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addPhoto(@ModelAttribute CreateOfferDTO createOfferDTO) {
         try {
-            imageService.saveImageToStorage(createOfferDTO.getImage());
+
+            imageService.saveImageToStorage(createOfferDTO.getImage().getOriginalFilename(),createOfferDTO.getImage().getBytes());
         } catch (Exception e) {
             logger.error("Error while saving image: {}", e.getMessage());
             return ResponseEntity.internalServerError().body("Error while saving image.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Added photo");
+    }
+
+    @GetMapping(TEST_DELETE_FLIGHT_URL)
+    public ResponseEntity<String> deleteFlight(@PathVariable Integer id) {
+//        var flight = flightJpaRepository.findById(id);
+        flightJpaRepository.deleteById(id);
+        return ResponseEntity.ok().body("Deleted flight");
     }
 }

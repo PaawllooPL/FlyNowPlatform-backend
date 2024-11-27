@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -35,5 +36,6 @@ public class CompanyEntity {
 
     @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
-    private List<CommentEntity> comments;
+    @Builder.Default
+    private List<CommentEntity> comments = new ArrayList<>();
 }

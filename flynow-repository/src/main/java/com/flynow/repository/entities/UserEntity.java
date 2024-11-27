@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,5 +37,6 @@ public class UserEntity {
         name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleEntity> accountRoles;
+    @Builder.Default
+    private List<RoleEntity> accountRoles = new ArrayList<>();
 }

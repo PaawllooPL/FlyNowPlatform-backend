@@ -18,6 +18,10 @@ public class FlightPictureEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = true)
+
+    /**
+     * File name with extension e.g. {@code photo_1.jpg}
+     */
+    @Column(nullable = false)
     private String pictureFileName;
 }

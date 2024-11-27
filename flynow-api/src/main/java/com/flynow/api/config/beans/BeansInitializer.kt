@@ -1,5 +1,6 @@
 package com.flynow.api.config.beans
 
+import com.flynow.api.config.startup.DataLoader
 import com.flynow.service.mappers.CommentMapper
 import com.flynow.service.mappers.CompanyMapper
 import com.flynow.service.mappers.RoleMapper
@@ -27,4 +28,8 @@ val beans = beans {
     bean<UserDetailsServiceImpl>()
     bean<CompanyServiceImpl>()
     bean<ImageService>() //depends on future flight service
+    bean<DataLoader>()
+    bean<OfferServiceImpl>()
+    bean<CommentServiceImpl>()
+    bean<UserServiceImpl>()
 }

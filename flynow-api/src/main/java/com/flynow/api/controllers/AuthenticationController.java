@@ -15,7 +15,9 @@ import org.hibernate.type.descriptor.DateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,7 @@ public class AuthenticationController {
     private final PasswordEncoder passwordEncoder;
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @PostMapping(AUTHENTICATION_REGISTER)
+    @PostMapping(value = AUTHENTICATION_REGISTER/*, headers = MediaType.APPLICATION_JSON_VALUE*/)
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody final RegisterUserDTO registerUserDTO) {
         try {
@@ -76,12 +78,16 @@ public class AuthenticationController {
     @PostMapping(AUTHENTICATION_LOGIN)
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
+            logger.debug("Starting /login endpoint. email: {} password: {}", authenticationRequest.getEmail(), authenticationRequest.getPassword());
             AuthenticationResponse res = authService.authenticate(authenticationRequest);
             return ResponseEntity.ok(res);
         } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                logger.debug("{}{} | Invalid username or password", AUTHENTICATION, AUTHENTICATION_LOGIN);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             logger.error("Error authenticating user", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
         }
 
     }

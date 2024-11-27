@@ -39,7 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             jwt = authHeader.substring(7);//Bearer length is 7
-            userEmail = jwtService.extractUserName(jwt);//todo extract userEmail from jwt Token
+            try {
+                userEmail = jwtService.extractUserName(jwt);//todo extract userEmail from jwt Token
+
+            } catch (Exception e) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             if (!userEmail.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(jwt, userDetails)) {

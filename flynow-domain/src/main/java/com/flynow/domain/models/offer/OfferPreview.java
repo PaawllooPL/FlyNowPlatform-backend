@@ -1,13 +1,15 @@
-package com.flynow.api.dto.offer;
+package com.flynow.domain.models.offer;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor(staticName = "of")
 @Builder
-public class OfferPreviewDTO {
+public class OfferPreview {
     private Integer flightId;
     private String title;
     private Integer pricePerPerson;

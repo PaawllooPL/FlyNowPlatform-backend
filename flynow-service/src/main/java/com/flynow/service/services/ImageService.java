@@ -1,44 +1,58 @@
 package com.flynow.service.services;
 
 
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.UUID;
 
+
+@RequiredArgsConstructor
 public class ImageService {
 
     @Value("${image.upload.path}")
     private String uploadDirectory;
-
+    private final Logger logger = LoggerFactory.getLogger(ImageService.class);
     /**
-     * @param file File to save
+     * @param originalFileName original file name
+     * @param bytes image data in byte array
      * @return Name of file including its extension
      * @throws IOException
      */
-    public String saveImageToStorage(MultipartFile file) throws IOException {
-        String uniqueFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+    public Optional<String> saveImageToStorage(String originalFileName, byte[] bytes) {
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFileName;
 
         Path uploadPath = Path.of(uploadDirectory);
         Path filePath = uploadPath.resolve(uniqueFilename);
 
-        if(!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+        try {
+            if(!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            Files.write(filePath, bytes);
+        } catch (IOException e) {
+            logger.error("Error saving image to storage: ", e);
+            return Optional.empty();
         }
-        Files.write(filePath, file.getBytes());
 
-        return uniqueFilename;
+        return Optional.of(uniqueFilename);
     }
 
-    public byte[] getImageFromStorage(String filename) throws IOException {
+    public Resource getImageFromStorage(String filename) throws IOException {
         Path imagePath = Path.of(uploadDirectory, filename);
         if (Files.exists(imagePath)) {
-            return Files.readAllBytes(imagePath);
+            return new FileSystemResource(imagePath);
         } else {
-            return null;
+            throw new FileNotFoundException(filename);
         }
     }
 

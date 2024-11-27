@@ -43,11 +43,14 @@ public class TestService {
     public Company CreateCompany(Company company, Integer organizerId) {
         UserEntity organizerEntity = userJpaRepository.findById(organizerId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        RoleEntity organizerEntityRole = roleJpaRepository.findByName(RoleEnum.organizer).get();
+        organizerEntity.getAccountRoles().add(organizerEntityRole);
         
         CompanyEntity newCompanyEntity = CompanyEntity.builder()
-                .name("testowa firma")
-                .tin("19999999999999")
-                .address("Katowice Ogrodowa 15")
+                .name(company.getName())
+                .tin(company.getTin())
+                .address(company.getAddress())
                 .organizerAccount(organizerEntity)
                 .comments(List.of())
                 .build();
@@ -84,7 +87,8 @@ public class TestService {
 
     @Transactional
     public void SaveImage(MultipartFile file) throws IOException {
-        String fileName = imageService.saveImageToStorage(file);
+        String fileName = imageService.saveImageToStorage(file.getOriginalFilename(), file.getBytes())
+                .orElseThrow(RuntimeException::new);
         logger.debug("Image saved to storage: {}", fileName);
     }
 }

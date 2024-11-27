@@ -1,17 +1,14 @@
-package com.flynow.api.dto.offer;
+package com.flynow.domain.models.offer;
 
-import com.flynow.api.dto.comment.CommentDTO;
+import com.flynow.domain.models.Comment;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Builder
 @Getter
-@Setter
-public class OfferDetailsDTO {
-
+public class OfferDetails {
     private Integer flightId;
     private String title;
     private String description;
@@ -22,7 +19,7 @@ public class OfferDetailsDTO {
     private Integer eventOrganizerId;
     private String eventOrganizerName;
     private Integer eventOrganizerRating;
-    private List<CommentDTO> comments;
+    private List<Comment> comments;
     private Boolean canBuy;
     private Boolean canComment;
     private String address;
