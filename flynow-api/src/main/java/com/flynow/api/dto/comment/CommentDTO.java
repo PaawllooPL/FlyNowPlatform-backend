@@ -13,5 +13,7 @@ public class CommentDTO {
     private Integer rating;
     private String content;
 
-
+    public static CommentDTO fromDomain(Comment comment) {
+        return CommentDTO.of(comment.getUserId(), comment.getUsername(), comment.getRating(), comment.getContent());
+    }
 }

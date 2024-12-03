@@ -1,7 +1,7 @@
 package com.flynow.api.config.startup;
 
 import com.flynow.domain.models.AircraftType;
-import com.flynow.domain.models.Company;
+import com.flynow.domain.models.company.Company;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
 import com.flynow.repository.entities.FlightEntity;
@@ -14,13 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
 
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {

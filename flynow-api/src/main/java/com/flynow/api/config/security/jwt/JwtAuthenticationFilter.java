@@ -38,9 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            jwt = authHeader.substring(7);//Bearer length is 7
+            jwt = authHeader.substring(7);
             try {
-                userEmail = jwtService.extractUserName(jwt);//todo extract userEmail from jwt Token
+                userEmail = jwtService.extractEmail(jwt);
 
             } catch (Exception e) {
                 filterChain.doFilter(request, response);

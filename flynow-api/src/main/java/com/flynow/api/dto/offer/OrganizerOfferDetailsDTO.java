@@ -1,9 +1,6 @@
 package com.flynow.api.dto.offer;
 
-import com.flynow.api.dto.comment.CommentDTO;
-import com.flynow.domain.models.Comment;
-import com.flynow.domain.models.offer.OfferDetails;
-import com.flynow.service.mappers.CommentMapper;
+import com.flynow.domain.models.offer.OrganizerOfferDetails;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +8,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
-public class OfferDetailsDTO {
-
+@Builder
+public class OrganizerOfferDetailsDTO {
     private Integer flightId;
     private String title;
     private String description;
@@ -26,16 +22,15 @@ public class OfferDetailsDTO {
     private Integer eventOrganizerId;
     private String eventOrganizerName;
     private Integer eventOrganizerRating;
-    private List<CommentDTO> comments;
-    private Boolean canBuy;
-    private Boolean canComment;
     private String address;
     private LocalDateTime flightDate;
+    private List<OfferClientDTO> clients;
 
-    public static OfferDetailsDTO fromDomain(OfferDetails offerDetails, List<Comment> comments) {
+    public static OrganizerOfferDetailsDTO fromDomain(OrganizerOfferDetails offerDetails) {
 
-        var commentsDto = comments.stream().map(CommentDTO::fromDomain).toList();
-        return OfferDetailsDTO.builder()
+        var clientsDto = offerDetails.getClients().stream().map(OfferClientDTO::fromDomain).toList();
+
+        return OrganizerOfferDetailsDTO.builder()
                 .flightId(offerDetails.getFlightId())
                 .title(offerDetails.getTitle())
                 .description(offerDetails.getDescription())
@@ -46,11 +41,9 @@ public class OfferDetailsDTO {
                 .eventOrganizerId(offerDetails.getEventOrganizerId())
                 .eventOrganizerName(offerDetails.getEventOrganizerName())
                 .eventOrganizerRating(offerDetails.getEventOrganizerRating())
-                .comments(commentsDto)
-                .canBuy(offerDetails.getCanBuy())
-                .canComment(offerDetails.getCanComment())
                 .address(offerDetails.getAddress())
                 .flightDate(offerDetails.getFlightDate())
+                .clients(clientsDto)
                 .build();
     }
 }

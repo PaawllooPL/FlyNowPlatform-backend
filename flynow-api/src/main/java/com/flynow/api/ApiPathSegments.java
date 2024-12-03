@@ -57,10 +57,16 @@ public class ApiPathSegments {
     public static final String OFFERS_DETAILS = FLIGHT_ID + "/details";
     public static final String OFFERS_BUY = FLIGHT_ID + "/buy";
     public static final String OFFERS_CREATE = "/create";
+    public static final String OFFERS_USER = "/user-offers";
+    public static final String OFFERS_ORGANIZER = "/organizer-offers";
+    public static final String OFFERS_ORGANIZER_DETAILS = OFFERS_ORGANIZER + OFFERS_DETAILS;
     //Paths
     public static final String OFFERS_DETAILS_URL = OFFERS + OFFERS_DETAILS;
     public static final String OFFERS_BUY_URL = OFFERS + FLIGHT_ID + "/buy";
     public static final String OFFERS_CREATE_URL = OFFERS + OFFERS_CREATE;
+    public static final String OFFERS_USER_URL = OFFERS + OFFERS_USER;
+    public static final String OFFERS_ORGANIZER_URL = OFFERS + OFFERS_ORGANIZER;
+    public static final String OFFERS_ORGANIZER_DETAILS_URL = OFFERS + OFFERS_ORGANIZER_DETAILS;
 
     //COMMENT
     public static final String COMMENTS = "/comments";
@@ -68,4 +74,11 @@ public class ApiPathSegments {
     public static final String COMMENTS_ADD = "/add";
     //Paths
     public static final String COMMENTS_ADD_URL = COMMENTS + COMMENTS_ADD;
+
+    //COMPANY
+    public static final String COMPANY = "/company";
+    //Level 1
+    public static final String COMPANY_CREATE = "/create";
+    //Paths
+    public static final String COMPANY_CREATE_URL = COMPANY+COMPANY_CREATE;
 }

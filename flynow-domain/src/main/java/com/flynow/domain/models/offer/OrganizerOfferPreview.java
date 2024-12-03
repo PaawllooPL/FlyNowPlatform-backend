@@ -5,18 +5,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor(staticName = "of")
 @Builder
-public class OfferPreview {
+public class OrganizerOfferPreview {
+
     private Integer flightId;
     private String title;
     private Integer pricePerPerson;
-    private String aircraftType;
+    private Integer clientCount;
+    private Integer totalSeats;
     private String address;
     private LocalDateTime flightDate;
     private String imageFilename;

@@ -4,6 +4,7 @@ import com.flynow.service.exceptions.*;
 import com.flynow.service.exceptions.flight.FlightNotFoundException;
 import com.flynow.service.exceptions.comment.CommentNotAllowedException;
 import com.flynow.service.exceptions.flight.SeatNotAvailableException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,22 @@ public class GlobalExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     //GENERAL
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exception(Exception ex) {
+        logger.error("Exception: ", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
+    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
         logger.debug("Runtime exception: ", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadClientRequestException(BadRequestException e) {
+        logger.debug("Bad client request: ", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
 
     //AUTH
     @ExceptionHandler(NotAuthenticatedException.class)

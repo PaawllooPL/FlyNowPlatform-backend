@@ -1,6 +1,7 @@
 package com.flynow.service.mappers;
 
-import com.flynow.domain.models.Company;
+import com.flynow.domain.models.company.Company;
+import com.flynow.domain.models.company.CreateCompany;
 import com.flynow.repository.entities.CompanyEntity;
 import com.flynow.repository.entities.UserEntity;
 
@@ -15,12 +16,12 @@ public class CompanyMapper {
                 .comments(entity.getComments().stream().map(CommentMapper::toDomain).toList())
                 .build();
     }
-    public static CompanyEntity toEntityWithExistingUser(Company company, UserEntity user) {
+    public static CompanyEntity toNewEntityWithExistingUser(CreateCompany createCompany, UserEntity user) {
         return CompanyEntity.builder()
                 .organizerAccount(user)
-                .name(company.getName())
-                .tin(company.getTin())
-                .address(company.getAddress())
+                .name(createCompany.getName())
+                .tin(createCompany.getTIN())
+                .address(createCompany.getAddress())
                 .build();
     }
 }

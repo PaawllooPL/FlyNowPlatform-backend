@@ -4,13 +4,10 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.micrometer.common.util.StringUtils;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.type.descriptor.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.*;
@@ -23,7 +20,7 @@ public class JwtService {
     @Value("${jwt.secretKey}")
     private String SECRET_KEY;
 
-    public String extractUserName(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -49,7 +46,7 @@ public class JwtService {
     }
 
     public Boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUserName(token);
+        final String username = extractEmail(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
@@ -83,12 +80,12 @@ public class JwtService {
     }
 
     public String getEmailFromToken(String token) {
-        return extractUserName(token);
+        return extractEmail(token);
     }
 
     public Boolean validateToken(String token) {
 
-        String userEmail = extractUserName(token);//todo extract userEmail from jwt Token
+        String userEmail = extractEmail(token);
         if (StringUtils.isNotEmpty(userEmail) && !isTokenExpired(token)) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             return isTokenValid(token, userDetails);

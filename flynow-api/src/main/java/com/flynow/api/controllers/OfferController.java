@@ -1,12 +1,8 @@
 package com.flynow.api.controllers;
 
 
-import com.flynow.api.dto.comment.CommentDTO;
-import com.flynow.api.dto.offer.CreateOfferDTO;
-import com.flynow.api.dto.offer.OfferDetailsDTO;
-import com.flynow.api.dto.offer.OfferPreviewDTO;
+import com.flynow.api.dto.offer.*;
 import com.flynow.domain.interfaces.usecases.OfferUseCases;
-import com.flynow.domain.models.offer.CreateOffer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,57 +28,57 @@ public class OfferController {
     @GetMapping()
     public ResponseEntity<List<OfferPreviewDTO>> getOfferPreviews() {
         try {
-            var dtoOffers = offerUseCases.getOfferPreviews().stream().map(offerPreview ->
-                    OfferPreviewDTO.builder()
-                            .flightId(offerPreview.getFlightId())
-                            .title(offerPreview.getTitle())
-                            .pricePerPerson(offerPreview.getPricePerPerson())
-                            .aircraftType(offerPreview.getAircraftType())
-                            .address(offerPreview.getAddress())
-                            .imageFilename(offerPreview.getImageFilename())
-                            .build())
-                    .toList();
+            var dtoOffers = offerUseCases.getOfferPreviews().stream()
+                    .map(OfferPreviewDTO::fromDomain).toList();
             return ResponseEntity.ok(dtoOffers);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
+
     @PreAuthorize("permitAll()")
     @GetMapping(value = OFFERS_DETAILS, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OfferDetailsDTO> getOfferDetails(@PathVariable final Integer flightId) {
         var offerDetails = offerUseCases.getOfferDetails(flightId);
-        var commentsDto = offerDetails.getComments().stream()
-                .map(comment -> CommentDTO.of(comment.getUserId(),comment.getUsername(),comment.getRating(), comment.getContent()))
-                .toList();
+        var comments = offerDetails.getComments();
 
-        var offerDetailsDto = OfferDetailsDTO.builder()
-                .flightId(offerDetails.getFlightId())
-                .title(offerDetails.getTitle())
-                .description(offerDetails.getDescription())
-                .pricePerPerson(offerDetails.getPricePerPerson())
-                .remainingSeats(offerDetails.getRemainingSeats())
-                .aircraftType(offerDetails.getAircraftType())
-                .imageFilename(offerDetails.getImageFilename())
-                .eventOrganizerId(offerDetails.getEventOrganizerId())
-                .eventOrganizerName(offerDetails.getEventOrganizerName())
-                .eventOrganizerRating(offerDetails.getEventOrganizerRating())
-                .comments(commentsDto)
-                .canBuy(offerDetails.getCanBuy())
-                .canComment(offerDetails.getCanComment())
-                .address(offerDetails.getAddress())
-                .build();
+        var offerDetailsDto = OfferDetailsDTO.fromDomain(offerDetails, comments);
         return ResponseEntity.ok(offerDetailsDto);
     }
+
     @GetMapping(OFFERS_BUY)
     public ResponseEntity<String> buyOffer(@PathVariable final Integer flightId) {
         offerUseCases.buyOffer(flightId);
         return ResponseEntity.ok().body("Successfully bought offer");
     }
+
     @PostMapping(value = OFFERS_CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createOffer(@ModelAttribute CreateOfferDTO createOfferDTO) {
         offerUseCases.createOffer(createOfferDTO.toDomain());
         return ResponseEntity.status(HttpStatus.OK).body("Successfully created offer");
     }
 
+    @GetMapping(value = OFFERS_USER)
+    public ResponseEntity<List<OfferPreviewDTO>> getUserOfferPreviews() {
+        var offerPreviewsDtoList = offerUseCases.getUserOfferPreviews().stream()
+                .map(OfferPreviewDTO::fromDomain).toList();
+        return ResponseEntity.ok().body(offerPreviewsDtoList);
+    }
+
+    @GetMapping(value = OFFERS_ORGANIZER)
+    public ResponseEntity<List<OrganizerOfferPreviewDTO>> getOrganizerOfferPreviews() {
+        var organizerOfferPreviewDtoList = offerUseCases.getOrganizerOfferPreviews().stream()
+                .map(OrganizerOfferPreviewDTO::fromDomain).toList();
+        return ResponseEntity.ok().body(organizerOfferPreviewDtoList);
+    }
+
+    @GetMapping(value = OFFERS_ORGANIZER_DETAILS)
+    public ResponseEntity<OrganizerOfferDetailsDTO> getOrganizerOfferDetails(@PathVariable final Integer flightId) {
+        var organizerOfferDetails = offerUseCases.getOrganizerOfferDetails(flightId);
+        var organizerOfferDetailsDto = OrganizerOfferDetailsDTO.fromDomain(organizerOfferDetails);
+
+        return ResponseEntity.status(HttpStatus.OK).body(organizerOfferDetailsDto);
+    }
 }

@@ -6,10 +6,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@ComponentScan(basePackages = {"com.flynow.api.config.beans", "com.flynow"})
+@ComponentScan(basePackages = {
+        "com.flynow.api.config",
+        "com.flynow.api.controllers",
+})
 @EntityScan(basePackages = {"com.flynow.repository.entities"})
 @EnableJpaRepositories(basePackages = {"com.flynow.repository.repositories.jpa"})
-@SpringBootApplication
+@SpringBootApplication()
 public class FlynowApplication {
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package com.flynow.service.services;
 
 import com.flynow.domain.models.AircraftType;
-import com.flynow.domain.models.Company;
+import com.flynow.domain.models.company.Company;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
 import com.flynow.repository.entities.CompanyEntity;
@@ -13,13 +13,9 @@ import com.flynow.service.mappers.AircraftTypeMapper;
 import com.flynow.service.mappers.CompanyMapper;
 import com.flynow.service.mappers.RoleMapper;
 import com.flynow.service.mappers.UserMapper;
-import com.flynow.service.models.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,5 +1,7 @@
-package com.flynow.domain.models;
+package com.flynow.domain.models.company;
 
+import com.flynow.domain.models.Comment;
+import com.flynow.domain.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

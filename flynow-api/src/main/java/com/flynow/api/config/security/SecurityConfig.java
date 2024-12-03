@@ -6,12 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AnonymousConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -56,15 +54,16 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(BASE_PATH + AUTHENTICATION + ALL_PATHS).permitAll()
-                        .requestMatchers(BASE_PATH + TEST + ALL_PATHS).permitAll()
-                        .requestMatchers(BASE_PATH + TEST + AUTHENTICATION_TEST).hasAuthority(RoleEnum.user.name())
-//                        .requestMatchers(BASE_PATH + TEST + TEST_CREATE_DATA + ALL_PATHS).permitAll()
                         .requestMatchers(BASE_PATH + IMAGE + IMAGE_FILENAME_PARAMETER).permitAll()
                         .requestMatchers(BASE_PATH + OFFERS).permitAll()
                         .requestMatchers(BASE_PATH + OFFERS_DETAILS_URL).permitAll()
                         .requestMatchers(BASE_PATH + OFFERS_BUY_URL).hasAnyAuthority(RoleEnum.user.name(), RoleEnum.admin.name())
                         .requestMatchers(BASE_PATH + OFFERS_CREATE_URL).hasAnyAuthority(RoleEnum.organizer.name(), RoleEnum.admin.name())
-                        .requestMatchers(BASE_PATH + COMMENTS_ADD_URL).hasAnyAuthority(RoleEnum.user.name(), RoleEnum.admin.name())
+                        .requestMatchers(BASE_PATH + COMMENTS_ADD_URL).authenticated()
+                        .requestMatchers(BASE_PATH + COMPANY_CREATE_URL).hasAnyAuthority(RoleEnum.user.name(), RoleEnum.admin.name())
+                        .requestMatchers(BASE_PATH + OFFERS_USER_URL).hasAuthority(RoleEnum.user.name())
+                        .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_URL).hasAuthority(RoleEnum.organizer.name())
+                        .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_DETAILS_URL).hasAuthority(RoleEnum.organizer.name())
                         .requestMatchers(AUTH_WHITELIST).permitAll()
 //                        .anyRequest().permitAll()
 //                        .anyRequest().authenticated()
@@ -77,7 +76,7 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:4200")); // Add your front-end URLs here
+        corsConfig.setAllowedOrigins(List.of("http://localhost:4200"));
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         corsConfig.setAllowCredentials(true);

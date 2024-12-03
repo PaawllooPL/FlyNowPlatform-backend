@@ -3,9 +3,7 @@ package com.flynow.service.services;
 import com.flynow.domain.interfaces.usecases.CommentUseCases;
 import com.flynow.domain.interfaces.usecases.OfferUseCases;
 import com.flynow.domain.models.RoleEnum;
-import com.flynow.domain.models.offer.CreateOffer;
-import com.flynow.domain.models.offer.OfferDetails;
-import com.flynow.domain.models.offer.OfferPreview;
+import com.flynow.domain.models.offer.*;
 import com.flynow.repository.entities.*;
 import com.flynow.repository.repositories.jpa.AircraftTypeJpaRepository;
 import com.flynow.repository.repositories.jpa.CompanyJpaRepository;
@@ -21,13 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -55,6 +53,7 @@ public class OfferServiceImpl implements OfferUseCases {
                         .pricePerPerson(flightEntity.getPricePerPerson())
                         .aircraftType(flightEntity.getAircraftType().getName())
                         .address(flightEntity.getAddress())
+                        .flightDate(flightEntity.getFlightDate())
                         .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
                         .build())
                 .toList();
@@ -87,6 +86,8 @@ public class OfferServiceImpl implements OfferUseCases {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             var didBuy = flightEntity.getJunctionClients().stream().anyMatch(jc -> jc.getUser().getId() == userDetails.getUserEntity().getId());
             canBuy = !didBuy;
+            if(flightEntity.getCompany().getOrganizerAccount().getId() == userDetails.getUserEntity().getId())
+                canBuy = false;
             logger.debug("Can buy: {}", canBuy);
             logger.debug("Did buy: {}", didBuy);
         }
@@ -108,6 +109,7 @@ public class OfferServiceImpl implements OfferUseCases {
                 .canBuy(canBuy)
                 .canComment(commentUseCases.canComment(flightId))
                 .address(flightEntity.getAddress())
+                .flightDate(flightEntity.getFlightDate())
                 .build();
     }
 
@@ -126,11 +128,14 @@ public class OfferServiceImpl implements OfferUseCases {
         FlightEntity flight = flightJpaRepository.findById(flightId).orElseThrow(
                 () -> new FlightNotFoundException("Flight with id: " + flightId + " not found"));
 
+        if(user.getId() == flight.getCompany().getOrganizerAccount().getId())
+            throw new NotAuthorizedException("User can not buy their offer.");
+
         if(flight.getJunctionClients().size() >= flight.getTotalSeats())
             throw new SeatNotAvailableException("Seat on flight id: " + flightId + " not available");
 
         if(flight.getJunctionClients().stream().anyMatch(jc -> jc.getUser().getId() == userDetails.getUserEntity().getId()))
-            throw new NotAuthorizedException("User with id:" + userDetails.getUserEntity().getId() + "already bought flight seat");
+            throw new NotAuthorizedException("User with id: " + userDetails.getUserEntity().getId() + " already bought flight seat");
 
         flight.getJunctionClients().add(UserFlightEntity.of(null, user, false));
         flightJpaRepository.save(flight);
@@ -183,5 +188,97 @@ public class OfferServiceImpl implements OfferUseCases {
             ratingSum = ratingSum / flightEntity.getCompany().getComments().size();
         }
         return ratingSum;
+    }
+
+    @Override
+    public List<OfferPreview> getUserOfferPreviews() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            throw new NotAuthenticatedException("Can't get user offer previews. User is not authenticated");
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        var userId = userDetails.getUserEntity().getId();
+        var userFlights = flightJpaRepository.findAllClientActiveOffers(userId, LocalDateTime.now().minusWeeks(2));
+
+        return userFlights.stream()
+                .map(flightEntity -> OfferPreview.builder()
+                        .flightId(flightEntity.getId())
+                        .title(flightEntity.getTitle())
+                        .pricePerPerson(flightEntity.getPricePerPerson())
+                        .aircraftType(flightEntity.getAircraftType().getName())
+                        .address(flightEntity.getAddress())
+                        .flightDate(flightEntity.getFlightDate())
+                        .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<OrganizerOfferPreview> getOrganizerOfferPreviews() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            throw new NotAuthenticatedException("Can't get organizer offer previews. User is not authenticated");
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        var companyFlights = flightJpaRepository
+                .findAllOrganizerActiveOffers(userDetails.getUserEntity().getId(), LocalDateTime.now().minusWeeks(2));
+
+
+        return companyFlights.stream()
+                .map(flightEntity -> OrganizerOfferPreview.builder()
+                        .flightId(flightEntity.getId())
+                        .title(flightEntity.getTitle())
+                        .pricePerPerson(flightEntity.getPricePerPerson())
+                        .clientCount(flightEntity.getJunctionClients().size())
+                        .totalSeats(flightEntity.getTotalSeats())
+                        .address(flightEntity.getAddress())
+                        .flightDate(flightEntity.getFlightDate())
+                        .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public OrganizerOfferDetails getOrganizerOfferDetails(Integer flightId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            throw new NotAuthenticatedException("Can't get organizer offer details. User is not authenticated");
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        var flightEntity = flightJpaRepository.findById(flightId)
+                .orElseThrow(FlightNotFoundException::new);
+
+        if(userDetails.getUserEntity().getId() != flightEntity.getCompany().getOrganizerAccount().getId())
+            throw new NotAuthorizedException("User is not organizer of this offer.");
+
+        var clients = flightEntity.getJunctionClients()
+                .stream().map(UserFlightEntity::getUser)
+                .map(userEntity -> OfferClient.builder()
+                        .email(userEntity.getEmail())
+                        .username(userEntity.getUsername())
+                        .build()).toList();
+        var remainingSeats = flightEntity.getTotalSeats() - flightEntity.getJunctionClients().size();
+
+        return OrganizerOfferDetails.builder()
+                .flightId(flightEntity.getId())
+                .title(flightEntity.getTitle())
+                .description(flightEntity.getDescription())
+                .pricePerPerson(flightEntity.getPricePerPerson())
+                .remainingSeats(remainingSeats)
+                .aircraftType(flightEntity.getAircraftType().getName())
+                .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
+                .eventOrganizerId(userDetails.getUserEntity().getId())
+                .eventOrganizerName(flightEntity.getCompany().getName())
+                .eventOrganizerRating(companyRating(flightEntity))
+                .address(flightEntity.getAddress())
+                .flightDate(flightEntity.getFlightDate())
+                .clients(clients)
+                .build();
     }
 }
