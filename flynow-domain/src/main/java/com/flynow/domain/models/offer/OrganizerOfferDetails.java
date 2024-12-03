@@ -1,7 +1,5 @@
 package com.flynow.domain.models.offer;
 
-import com.flynow.domain.models.Comment;
-import com.flynow.domain.models.User;
 import lombok.Builder;
 import lombok.Getter;
 

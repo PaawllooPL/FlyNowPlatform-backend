@@ -7,8 +7,6 @@ import com.flynow.api.dto.company.CreateCompanyDTO;
 import com.flynow.api.dto.offer.CreateOfferDTO;
 import com.flynow.api.dto.user.RegisterUserDTO;
 import com.flynow.domain.interfaces.usecases.CommentUseCases;
-import com.flynow.domain.interfaces.usecases.CompanyUseCases;
-import com.flynow.domain.interfaces.usecases.UserUseCases;
 import com.flynow.domain.models.*;
 import com.flynow.domain.models.company.Company;
 import com.flynow.repository.entities.*;
@@ -40,16 +38,12 @@ import static com.flynow.api.ApiPathSegments.*;
 public class TestController {
 
     private final Logger logger = LoggerFactory.getLogger(TestController.class);
-    private final RoleJpaRepository roleJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final AircraftTypeJpaRepository aircraftTypeJpaRepository;
-    private final RoleMapper roleMapper;
     private final TestService testService;
     private final ImageService imageService;
     private final CompanyJpaRepository companyJpaRepository;
-    private final CompanyUseCases companyUseCases;
     private final CommentUseCases commentUseCases;
-    private final UserUseCases userUseCases;
     private final FlightJpaRepository flightJpaRepository;
 
     @PostMapping()

@@ -4,7 +4,6 @@ import com.flynow.service.exceptions.*;
 import com.flynow.service.exceptions.flight.FlightNotFoundException;
 import com.flynow.service.exceptions.comment.CommentNotAllowedException;
 import com.flynow.service.exceptions.flight.SeatNotAvailableException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -64,19 +63,19 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(AircraftTypeNotFoundException.class)
     public ResponseEntity<String> aircraftTypeNotFoundException(AircraftTypeNotFoundException e) {
-        logger.debug("Aircraft type not found. Error message:", e);
+        logger.debug("Aircraft type not found. Error message: ", e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aircraft type not found.");
     }
     //---------------------------PERMISSION---------------------------------------
     @ExceptionHandler(InsufficientPermissionsException.class)
     public ResponseEntity<String> insufficientPermissionsException(InsufficientPermissionsException e) {
-        logger.debug("Insuffisient permissions. Error message:", e);
+        logger.debug("Insuffisient permissions. Error message: ", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
     //---------------------------COMMENT---------------------------------------
     @ExceptionHandler(CommentNotAllowedException.class)
     public ResponseEntity<String> commentNotAllowedException(CommentNotAllowedException e) {
-        logger.debug("Comment not allowed. Error message:");
+        logger.debug("Comment not allowed. Error message: ", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Comment not allowed.");
     }
     @ExceptionHandler(SeatNotAvailableException.class)

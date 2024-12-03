@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestService {
 
-    private final CommentJpaRepository commentJpaRepository;
     private final CompanyJpaRepository companyJpaRepository;
     private final RoleJpaRepository roleJpaRepository;
     private final UserJpaRepository userJpaRepository;

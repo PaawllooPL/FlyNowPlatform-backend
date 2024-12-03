@@ -1,7 +1,6 @@
 package com.flynow.service.services;
 
 import com.flynow.domain.interfaces.usecases.CompanyUseCases;
-import com.flynow.domain.models.company.Company;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.company.CreateCompany;
 import com.flynow.repository.entities.CompanyEntity;

@@ -1,6 +1,5 @@
 package com.flynow.api.dto.offer;
 
-import com.flynow.domain.models.offer.OfferPreview;
 import com.flynow.domain.models.offer.OrganizerOfferPreview;
 import lombok.Builder;
 import lombok.Getter;

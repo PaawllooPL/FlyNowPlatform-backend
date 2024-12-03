@@ -65,24 +65,10 @@ public class SecurityConfig {
                         .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_URL).hasAuthority(RoleEnum.organizer.name())
                         .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_DETAILS_URL).hasAuthority(RoleEnum.organizer.name())
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-//                        .anyRequest().permitAll()
-//                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-
-    private CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:4200"));
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-        corsConfig.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig);
-        return source;
     }
 }

@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -43,7 +42,6 @@ public class OfferServiceImpl implements OfferUseCases {
     @Override
     @Transactional
     public List<OfferPreview> getOfferPreviews() {
-//        var flights = flightJpaRepository.findAll();
         var flights = flightJpaRepository.findAllActiveWithSeatsLeft();
 
         return flights.stream()

@@ -3,7 +3,6 @@ package com.flynow.api.dto.offer;
 import com.flynow.api.dto.comment.CommentDTO;
 import com.flynow.domain.models.Comment;
 import com.flynow.domain.models.offer.OfferDetails;
-import com.flynow.service.mappers.CommentMapper;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
