@@ -5,8 +5,21 @@ spring:
     password: postgres
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+#      ddl-auto: update
     show-sql: true
 logging:
   level:
+    com.flynow: DEBUG
     sql: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+#jwt:
+#  rsa-private-key: classpath:certs/privateKey.pem
+#  rsa-public-key: classpath:certs/publicKey.pem
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
