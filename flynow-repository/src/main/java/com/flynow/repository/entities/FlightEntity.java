@@ -1,16 +1,12 @@
 package com.flynow.repository.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.Duration;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,22 +14,35 @@ import java.util.List;
 @Setter
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "flights")
 public class FlightEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private Date flightDate;
+    private LocalDateTime flightDate;
 
-    private Duration flightDuration;
+    @Column(length = 3)
+    private Integer duration;
 
     @Column(nullable = false)
     private Integer pricePerPerson;
 
+    @Column(nullable = false)
+    private Integer totalSeats;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(length = 1000)
     private String description;
+
+    @Column(nullable = false)
+    private String address;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -42,7 +51,9 @@ public class FlightEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "flight_id")
-    private List<UserFlightEntity> junctionClients;
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @Builder.Default
+    private List<UserFlightEntity> junctionClients = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -50,6 +61,6 @@ public class FlightEntity {
     private AircraftTypeEntity aircraftType;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JoinColumn(name = "flight_id")
+    @JoinColumn(name = "picture_id")
     private FlightPictureEntity flightPicture;
 }

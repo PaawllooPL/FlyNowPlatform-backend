@@ -17,13 +17,14 @@ import org.hibernate.annotations.OnDeleteAction;
 public class UserFlightEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.RESTRICT)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity user;
 
     @Column(nullable = false)
-    private String didComment;
+    private Boolean didComment;
 }

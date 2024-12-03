@@ -13,11 +13,12 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "comments")
 public class CommentEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
     private Integer rating;
 
+    @Column(length = 255)
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
