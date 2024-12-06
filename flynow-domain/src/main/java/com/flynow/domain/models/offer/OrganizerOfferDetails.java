@@ -21,6 +21,7 @@ public class OrganizerOfferDetails {
     private String eventOrganizerName;
     private Integer eventOrganizerRating;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
     private List<OfferClient> clients;
 }

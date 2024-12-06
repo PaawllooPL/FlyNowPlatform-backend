@@ -60,6 +60,7 @@ public class ApiPathSegments {
     public static final String OFFERS_USER = "/user-offers";
     public static final String OFFERS_ORGANIZER = "/organizer-offers";
     public static final String OFFERS_ORGANIZER_DETAILS = OFFERS_ORGANIZER + OFFERS_DETAILS;
+    public static final String OFFERS_FILTERED = "/filtered";
     //Paths
     public static final String OFFERS_DETAILS_URL = OFFERS + OFFERS_DETAILS;
     public static final String OFFERS_BUY_URL = OFFERS + FLIGHT_ID + "/buy";
@@ -67,6 +68,7 @@ public class ApiPathSegments {
     public static final String OFFERS_USER_URL = OFFERS + OFFERS_USER;
     public static final String OFFERS_ORGANIZER_URL = OFFERS + OFFERS_ORGANIZER;
     public static final String OFFERS_ORGANIZER_DETAILS_URL = OFFERS + OFFERS_ORGANIZER_DETAILS;
+    public static final String OFFERS_FILTERED_URL = OFFERS + OFFERS_FILTERED;
 
     //COMMENT
     public static final String COMMENTS = "/comments";

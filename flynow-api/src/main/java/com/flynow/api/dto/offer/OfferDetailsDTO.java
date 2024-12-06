@@ -29,6 +29,7 @@ public class OfferDetailsDTO {
     private Boolean canBuy;
     private Boolean canComment;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
 
     public static OfferDetailsDTO fromDomain(OfferDetails offerDetails, List<Comment> comments) {
@@ -49,6 +50,7 @@ public class OfferDetailsDTO {
                 .canBuy(offerDetails.getCanBuy())
                 .canComment(offerDetails.getCanComment())
                 .address(offerDetails.getAddress())
+                .voivodeship(offerDetails.getVoivodeship())
                 .flightDate(offerDetails.getFlightDate())
                 .build();
     }

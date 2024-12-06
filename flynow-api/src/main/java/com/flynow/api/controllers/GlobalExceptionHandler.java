@@ -32,7 +32,11 @@ public class GlobalExceptionHandler {
         logger.debug("Bad client request: ", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        logger.debug("Illegal argument: ", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 
     //AUTH
     @ExceptionHandler(NotAuthenticatedException.class)

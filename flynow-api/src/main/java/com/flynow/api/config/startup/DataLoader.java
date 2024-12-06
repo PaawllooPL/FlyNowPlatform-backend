@@ -1,6 +1,7 @@
 package com.flynow.api.config.startup;
 
 import com.flynow.domain.models.AircraftType;
+import com.flynow.domain.models.VoivodeshipEnum;
 import com.flynow.domain.models.company.Company;
 import com.flynow.domain.models.RoleEnum;
 import com.flynow.domain.models.User;
@@ -51,9 +52,13 @@ public class DataLoader implements CommandLineRunner {
             if(userJpaRepository.count() == 0) {
                 var users = List.of(
                     User.of("pawel", "pawel@gmail.com", passwordEncoder.encode("Pawel123!"), Date.from(Instant.now()), List.of(RoleEnum.user)),
-                    User.of("kuba", "kuba@gmail.com", passwordEncoder.encode("Kuba123!"), Date.from(Instant.now()), List.of(RoleEnum.user)));
-                authService.register(users.get(0));
-                authService.register(users.get(1));
+                    User.of("kuba", "kuba@gmail.com", passwordEncoder.encode("Kuba123!"), Date.from(Instant.now()), List.of(RoleEnum.user)),
+                    User.of("kacper", "kacper@gmail.com", passwordEncoder.encode("Kacper123!"), Date.from(Instant.now()), List.of(RoleEnum.user)),
+                    User.of("marek", "marek@gmail.com", passwordEncoder.encode("Marek123!"), Date.from(Instant.now()), List.of(RoleEnum.user)),
+                    User.of("adam", "adam@gmail.com", passwordEncoder.encode("Adam123!"), Date.from(Instant.now()), List.of(RoleEnum.user)));
+                for(var user: users) {
+                    authService.register(user);
+                }
             }
             if(companyJpaRepository.count() == 0) {
                 Company company = Company.of(null, "Best Flight",
@@ -67,17 +72,26 @@ public class DataLoader implements CommandLineRunner {
                 var user = userJpaRepository.findByEmail("kuba@gmail.com").get();
 
                 var flights = List.of(
-                    FlightEntity.of(null, LocalDateTime.now().plusWeeks(1), 120, 399, 4,
-                            "Opis zdjecie1","opis opis opis lorem ipsum", "Lotnisko Katowice Długa 68", company, List.of(), awionetka_type,
-                        FlightPictureEntity.of(null, "zdjecie_1.jpg")),
-                    FlightEntity.of(null, LocalDateTime.now().plusWeeks(2), 60, 199, 4,
-                            "Opis zdjecie2","opis opis opis lorem ipsum", "Lotnisko Warszawa Krótka 17", company,
-                        List.of(UserFlightEntity.of(null, user, false)), awionetka_type,
-                        FlightPictureEntity.of(null, "zdjecie_2.jpg")),
                     FlightEntity.of(null, LocalDateTime.now().minusWeeks(1), 60, 99, 2,
-                            "Opis zdjecie3","opis opis opis lorem ipsum", "Lotnisko Dubaj Alsheirk 28", company,
+                            "Przelot widokowy awionetką nad Mazurami – widoki z nieba!"
+                            ,"Wzbicie się w przestworza nad jednym z najpiękniejszych regionów Polski – Mazurami! " +
+                                    "Nasza oferta obejmuje przelot widokowy awionetką z lotniska w Giżycku. " +
+                                    "Zobacz malownicze jeziora, lasy i rozległe pola z perspektywy nieba. " +
+                                    "Podczas lotu będziesz mógł podziwiać urokliwą krainę tysiąca jezior oraz okoliczne wioski. " +
+                                    "Lot odbywa się w komfortowej awionetce z doświadczonym pilotem, " +
+                                    "zapewniającym pełne bezpieczeństwo i niezapomniane wrażenia. " +
+                                    "Idealny pomysł na prezent lub wyjątkowy sposób na odkrycie piękna Mazur z innej perspektywy.",
+                            "Lotnisko Giżycko (EPLG) Żernickiego 1", VoivodeshipEnum.kujawskoPomorskie, company,
                         List.of(UserFlightEntity.of(null, user, false)), helikopter_type,
-                        FlightPictureEntity.of(null, "zdjecie_3.jpg")));
+                        FlightPictureEntity.of(null, "zdjecie_1.jpg")),
+                    FlightEntity.of(null, LocalDateTime.now().plusWeeks(1), 120, 399, 4,
+                            "Opis zdjecie2","opis opis opis lorem ipsum", "Lotnisko Katowice Długa 68", VoivodeshipEnum.dolnoslaskie, company, List.of(), awionetka_type,
+                        FlightPictureEntity.of(null, "zdjecie_2.jpg")),
+                    FlightEntity.of(null, LocalDateTime.now().plusWeeks(2), 60, 199, 4,
+                            "Opis zdjecie3","opis opis opis lorem ipsum", "Lotnisko Warszawa Krótka 17", VoivodeshipEnum.warminskoMazurskie, company,
+                        List.of(UserFlightEntity.of(null, user, false)), awionetka_type,
+                        FlightPictureEntity.of(null, "zdjecie_3.jpg"))
+                );
 
                 flightJpaRepository.saveAll(flights);
             }

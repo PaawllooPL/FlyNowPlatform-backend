@@ -17,6 +17,7 @@ public class OrganizerOfferPreviewDTO {
     private Integer clientCount;
     private Integer totalSeats;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
     private String imageFilename;
 
@@ -28,6 +29,7 @@ public class OrganizerOfferPreviewDTO {
                 .clientCount(offer.getClientCount())
                 .totalSeats(offer.getTotalSeats())
                 .address(offer.getAddress())
+                .voivodeship(offer.getVoivodeship())
                 .flightDate(offer.getFlightDate())
                 .imageFilename(offer.getImageFilename())
                 .build();

@@ -1,5 +1,6 @@
 package com.flynow.repository.repositories.jpa;
 
+import com.flynow.domain.models.VoivodeshipEnum;
 import com.flynow.repository.entities.FlightEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +40,15 @@ public interface FlightJpaRepository extends JpaRepository<FlightEntity, Integer
             "f.company.organizerAccount.id = :organizerId " +
             "order by f.flightDate asc")
     List<FlightEntity> findAllOrganizerActiveOffers(Integer organizerId, LocalDateTime afterDate);
+    @Query("select f from FlightEntity f " +
+            "left join f.company " +
+            "left join f.junctionClients jc " +
+            "left join f.aircraftType at " +
+            "left join f.flightPicture fp " +
+            "where f.flightDate > CURRENT_DATE " +
+            "and f.voivodeship in :voivodeships " +
+            "group by f.id " +
+            "having count(jc) < f.totalSeats " +
+            "order by f.flightDate asc")
+    List<FlightEntity> findAllByVoivodeshipIn(List<VoivodeshipEnum> voivodeships);
 }

@@ -123,13 +123,13 @@ public class TestController {
 
         var flights = List.of(
                 FlightEntity.of(null, LocalDateTime.now().plusWeeks(2), 120, 399, 4,
-                        "Opis zdjecie1","opis opis opis lorem ipsum", "Lotnisko Katowice Długa 68", company, List.of(), awionetka_type,
+                        "Opis zdjecie1","opis opis opis lorem ipsum", "Lotnisko Katowice Długa 68", VoivodeshipEnum.dolnoslaskie, company, List.of(), awionetka_type,
                         FlightPictureEntity.of(null, "zdjecie_1.jpg")),
                 FlightEntity.of(null, LocalDateTime.now().plusWeeks(1), 60, 199, 4,
-                        "Opis zdjecie2","opis opis opis lorem ipsum", "Lotnisko Warszawa Krótka 17", company, List.of(), awionetka_type,
+                        "Opis zdjecie2","opis opis opis lorem ipsum", "Lotnisko Warszawa Krótka 17", VoivodeshipEnum.dolnoslaskie, company, List.of(), awionetka_type,
                         FlightPictureEntity.of(null, "zdjecie_2.jpg")),
                 FlightEntity.of(null, LocalDateTime.now().minusWeeks(1), 60, 99, 2,
-                        "Opis zdjecie3","opis opis opis lorem ipsum",  "Lotnisko Dubaj Alsheirk 28", company,
+                        "Opis zdjecie3","opis opis opis lorem ipsum",  "Lotnisko Dubaj Alsheirk 28", VoivodeshipEnum.dolnoslaskie, company,
                         List.of(UserFlightEntity.of(null, user_commented, false),
                                 UserFlightEntity.of(null, user_not_commented, false)),
                         helikopter_type, FlightPictureEntity.of(null, "zdjecie_3.jpg")));

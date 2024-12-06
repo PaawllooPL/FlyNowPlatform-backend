@@ -3,7 +3,6 @@ package com.flynow.api.dto.offer;
 import com.flynow.domain.models.offer.CreateOffer;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -20,6 +19,7 @@ public class CreateOfferDTO {
     private Integer duration;
     private String aircraftType;
     private String address;
+    private String voivodeship;
     private MultipartFile image;
 
     public CreateOffer toDomain() {
@@ -33,6 +33,7 @@ public class CreateOfferDTO {
                 .duration(duration)
                 .aircraftType(aircraftType)
                 .address(address)
+                .voivodeship(voivodeship)
                 .originalPictureFilename(image.getOriginalFilename())
                 .pictureBytes(image.getBytes())
                 .build();

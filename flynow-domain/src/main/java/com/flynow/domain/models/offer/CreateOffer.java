@@ -20,5 +20,6 @@ public class CreateOffer {
     private String aircraftType;
     private String address;
     private String originalPictureFilename;
+    private String voivodeship;
     private byte[] pictureBytes;
 }

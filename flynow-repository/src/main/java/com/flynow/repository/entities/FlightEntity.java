@@ -1,5 +1,6 @@
 package com.flynow.repository.entities;
 
+import com.flynow.domain.models.VoivodeshipEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -43,6 +44,10 @@ public class FlightEntity {
 
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VoivodeshipEnum voivodeship;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)

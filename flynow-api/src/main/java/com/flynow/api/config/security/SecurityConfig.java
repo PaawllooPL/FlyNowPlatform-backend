@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers(BASE_PATH + OFFERS_USER_URL).hasAuthority(RoleEnum.user.name())
                         .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_URL).hasAuthority(RoleEnum.organizer.name())
                         .requestMatchers(BASE_PATH + OFFERS_ORGANIZER_DETAILS_URL).hasAuthority(RoleEnum.organizer.name())
+                        .requestMatchers(BASE_PATH + OFFERS_FILTERED_URL).permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

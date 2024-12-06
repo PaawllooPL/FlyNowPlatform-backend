@@ -3,6 +3,7 @@ package com.flynow.api.controllers;
 
 import com.flynow.api.dto.offer.*;
 import com.flynow.domain.interfaces.usecases.OfferUseCases;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,12 @@ public class OfferController {
             logger.error(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping(OFFERS_FILTERED)
+    public ResponseEntity<List<OfferPreviewDTO>> getFilteredOfferPreviews(@RequestParam List<String> voivodeships) {
+        var offers = offerUseCases.getFilteredOfferPreviews(voivodeships);
+        return ResponseEntity.ok(offers.stream().map(OfferPreviewDTO::fromDomain).toList());
     }
 
     @PreAuthorize("permitAll()")

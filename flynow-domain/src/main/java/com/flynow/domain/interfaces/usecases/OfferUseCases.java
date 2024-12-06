@@ -7,6 +7,7 @@ import java.util.List;
 public interface OfferUseCases {
 
     List<OfferPreview> getOfferPreviews();
+    List<OfferPreview> getFilteredOfferPreviews(List<String> filters);
     OfferDetails getOfferDetails(Integer flightId);
     void buyOffer(Integer flightId);
     void createOffer(CreateOffer createOffer);

@@ -25,5 +25,6 @@ public class OfferDetails {
     private Boolean canBuy;
     private Boolean canComment;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
 }

@@ -3,6 +3,7 @@ package com.flynow.service.services;
 import com.flynow.domain.interfaces.usecases.CommentUseCases;
 import com.flynow.domain.interfaces.usecases.OfferUseCases;
 import com.flynow.domain.models.RoleEnum;
+import com.flynow.domain.models.VoivodeshipEnum;
 import com.flynow.domain.models.offer.*;
 import com.flynow.repository.entities.*;
 import com.flynow.repository.repositories.jpa.AircraftTypeJpaRepository;
@@ -51,6 +52,29 @@ public class OfferServiceImpl implements OfferUseCases {
                         .pricePerPerson(flightEntity.getPricePerPerson())
                         .aircraftType(flightEntity.getAircraftType().getName())
                         .address(flightEntity.getAddress())
+                        .voivodeship(flightEntity.getVoivodeship().toString())
+                        .flightDate(flightEntity.getFlightDate())
+                        .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<OfferPreview> getFilteredOfferPreviews(List<String> filters) {
+        var filterEnums = filters.stream().map(VoivodeshipEnum::valueOf).toList();
+        var flights = flightJpaRepository.findAllByVoivodeshipIn(filterEnums);
+
+        if(filterEnums.isEmpty())
+            flights = flightJpaRepository.findAllActiveWithSeatsLeft();
+
+        return flights.stream()
+                .map(flightEntity -> OfferPreview.builder()
+                        .flightId(flightEntity.getId())
+                        .title(flightEntity.getTitle())
+                        .pricePerPerson(flightEntity.getPricePerPerson())
+                        .aircraftType(flightEntity.getAircraftType().getName())
+                        .address(flightEntity.getAddress())
+                        .voivodeship(flightEntity.getVoivodeship().toString())
                         .flightDate(flightEntity.getFlightDate())
                         .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
                         .build())
@@ -107,6 +131,7 @@ public class OfferServiceImpl implements OfferUseCases {
                 .canBuy(canBuy)
                 .canComment(commentUseCases.canComment(flightId))
                 .address(flightEntity.getAddress())
+                .voivodeship(flightEntity.getVoivodeship().toString())
                 .flightDate(flightEntity.getFlightDate())
                 .build();
     }
@@ -157,6 +182,8 @@ public class OfferServiceImpl implements OfferUseCases {
         var pictureFileName = imageService.saveImageToStorage(createOffer.getOriginalPictureFilename(), createOffer.getPictureBytes())
                 .orElseThrow(() -> new RuntimeException("Could not save image to storage"));
 
+        VoivodeshipEnum voivodeship = VoivodeshipEnum.valueOf(createOffer.getVoivodeship());
+
         FlightEntity newFlight = FlightEntity.builder()
                 .id(null)
                 .flightDate(createOffer.getFlightDate())
@@ -166,6 +193,7 @@ public class OfferServiceImpl implements OfferUseCases {
                 .title(createOffer.getTitle())
                 .description(createOffer.getDescription())
                 .address(createOffer.getAddress())
+                .voivodeship(voivodeship)
                 .company(company)
                 .junctionClients(new ArrayList<>())
                 .aircraftType(aircraftType)
@@ -207,6 +235,7 @@ public class OfferServiceImpl implements OfferUseCases {
                         .pricePerPerson(flightEntity.getPricePerPerson())
                         .aircraftType(flightEntity.getAircraftType().getName())
                         .address(flightEntity.getAddress())
+                        .voivodeship(flightEntity.getVoivodeship().name())
                         .flightDate(flightEntity.getFlightDate())
                         .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
                         .build())
@@ -234,6 +263,7 @@ public class OfferServiceImpl implements OfferUseCases {
                         .clientCount(flightEntity.getJunctionClients().size())
                         .totalSeats(flightEntity.getTotalSeats())
                         .address(flightEntity.getAddress())
+                        .voivodeship(flightEntity.getVoivodeship().toString())
                         .flightDate(flightEntity.getFlightDate())
                         .imageFilename(flightEntity.getFlightPicture().getPictureFileName())
                         .build())
@@ -275,6 +305,7 @@ public class OfferServiceImpl implements OfferUseCases {
                 .eventOrganizerName(flightEntity.getCompany().getName())
                 .eventOrganizerRating(companyRating(flightEntity))
                 .address(flightEntity.getAddress())
+                .voivodeship(flightEntity.getVoivodeship().toString())
                 .flightDate(flightEntity.getFlightDate())
                 .clients(clients)
                 .build();

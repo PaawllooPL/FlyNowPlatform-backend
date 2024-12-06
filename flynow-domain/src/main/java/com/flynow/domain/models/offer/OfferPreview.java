@@ -17,6 +17,7 @@ public class OfferPreview {
     private Integer pricePerPerson;
     private String aircraftType;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
     private String imageFilename;
 }

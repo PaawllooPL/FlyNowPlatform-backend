@@ -17,6 +17,7 @@ public class OfferPreviewDTO {
     private Integer pricePerPerson;
     private String aircraftType;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
     private String imageFilename;
 
@@ -27,6 +28,7 @@ public class OfferPreviewDTO {
                 .pricePerPerson(offerPreview.getPricePerPerson())
                 .aircraftType(offerPreview.getAircraftType())
                 .address(offerPreview.getAddress())
+                .voivodeship(offerPreview.getVoivodeship())
                 .flightDate(offerPreview.getFlightDate())
                 .imageFilename(offerPreview.getImageFilename())
                 .build();

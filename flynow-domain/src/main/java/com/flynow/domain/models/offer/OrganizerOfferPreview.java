@@ -19,6 +19,7 @@ public class OrganizerOfferPreview {
     private Integer clientCount;
     private Integer totalSeats;
     private String address;
+    private String voivodeship;
     private LocalDateTime flightDate;
     private String imageFilename;
 }
