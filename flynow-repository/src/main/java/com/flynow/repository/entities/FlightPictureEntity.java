@@ -17,8 +17,6 @@ public class FlightPictureEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-
     /**
      * File name with extension e.g. {@code photo_1.jpg}
      */

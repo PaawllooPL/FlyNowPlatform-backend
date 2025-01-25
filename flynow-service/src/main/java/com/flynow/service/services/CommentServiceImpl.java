@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentUseCases {
 
     @Override
     @Transactional
-    public Comment addComment(Comment comment, Integer CompanyId, Integer flightId) throws RuntimeException {
+    public Comment addComment(Comment comment, Integer flightId) throws RuntimeException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

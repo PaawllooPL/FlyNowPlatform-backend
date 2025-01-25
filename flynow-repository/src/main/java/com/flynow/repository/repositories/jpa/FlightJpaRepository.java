@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface FlightJpaRepository extends JpaRepository<FlightEntity, Integer> {
 
-    @Query("select f from FlightEntity f " +
+    @Query("select f from FlightEntity f " + // oferta
             "left join f.company " +
-            "left join f.junctionClients jc " +
+            "left join f.junctionClients jc " + //oferta JOIN lista klientów
             "left join f.aircraftType at " +
             "left join f.flightPicture fp " +
-            "where f.flightDate > CURRENT_DATE " +
+            "where f.flightDate > CURRENT_DATE " + // przed datą wydarzenia
             "group by f.id " +
-                    "having count(jc) < f.totalSeats " +
+                    "having count(jc) < f.totalSeats " + // tylko wolne miejsca
             "order by f.flightDate asc")
     List<FlightEntity> findAllActiveWithSeatsLeft();
 

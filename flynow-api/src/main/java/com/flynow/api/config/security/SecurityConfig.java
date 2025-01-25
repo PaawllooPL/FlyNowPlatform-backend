@@ -3,6 +3,7 @@ package com.flynow.api.config.security;
 import com.flynow.api.config.security.jwt.JwtAuthenticationFilter;
 import com.flynow.domain.models.RoleEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -39,6 +40,7 @@ public class SecurityConfig {
             // other public endpoints of your API may be appended to this array
     };
     private static final String ALL_PATHS = "/**";
+
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -47,6 +49,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+//                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     corsConfiguration.setAllowCredentials(true);

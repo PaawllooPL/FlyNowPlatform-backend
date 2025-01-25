@@ -22,7 +22,7 @@ public class CommentController {
     @PostMapping(value = COMMENTS_ADD, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> addComment(@RequestBody AddCommentDTO addCommentDTO) {
         Comment comment = Comment.of(null, null, addCommentDTO.getRating(), addCommentDTO.getContent());
-        commentUseCases.addComment(comment, addCommentDTO.getCompanyId(), addCommentDTO.getFlightId());
+        commentUseCases.addComment(comment, addCommentDTO.getFlightId());
 
         return ResponseEntity.status(HttpStatus.OK).body("Comment created successfully.");
     }

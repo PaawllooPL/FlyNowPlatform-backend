@@ -186,7 +186,7 @@ public class TestController {
         logger.error("Comment rating: {}", addCommentDTO.getRating());
         logger.error("Comment content: {}", addCommentDTO.getContent());
 
-        Comment comment = commentUseCases.addComment(addCommentDTO.getCompanyId(),
+        Comment comment = commentUseCases.addComment(1,
                 userDetails.getUserEntity().getId(),addCommentDTO.toDomainComment());
 
         CommentDTO commentDTO = CommentDTO.of(userDetails.getUserEntity().getId(),
