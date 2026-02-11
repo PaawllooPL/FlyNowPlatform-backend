@@ -2,26 +2,21 @@ package com.flynow.api.controllers;
 
 
 import com.flynow.api.dto.user.RegisterUserDTO;
-import com.flynow.domain.models.Role;
 import com.flynow.domain.models.RoleEnum;
-import com.flynow.domain.models.User;
+import com.flynow.domain.models.user.User;
 import com.flynow.service.models.AuthenticationRequest;
 import com.flynow.service.models.AuthenticationResponse;
 import com.flynow.service.services.AuthService;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.type.descriptor.DateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 

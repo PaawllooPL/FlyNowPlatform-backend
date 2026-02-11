@@ -20,7 +20,7 @@ public class OfferDetails {
     private String imageFilename;
     private Integer eventOrganizerId;
     private String eventOrganizerName;
-    private Integer eventOrganizerRating;
+    private Float eventOrganizerRating;
     private List<Comment> comments;
     private Boolean canBuy;
     private Boolean canComment;

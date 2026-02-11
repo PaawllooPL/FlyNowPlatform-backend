@@ -13,6 +13,9 @@ import com.flynow.repository.repositories.jpa.UserJpaRepository;
 import com.flynow.service.exceptions.*;
 import com.flynow.service.exceptions.flight.FlightNotFoundException;
 import com.flynow.service.exceptions.flight.SeatNotAvailableException;
+import com.flynow.service.exceptions.user.NotAuthenticatedException;
+import com.flynow.service.exceptions.user.NotAuthorizedException;
+import com.flynow.service.exceptions.user.UserNotFoundException;
 import com.flynow.service.mappers.CommentMapper;
 import com.flynow.service.models.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,8 +207,8 @@ public class OfferServiceImpl implements OfferUseCases {
         flightJpaRepository.save(newFlight);
     }
 
-    private Integer companyRating(FlightEntity flightEntity) {
-        var ratingSum = Integer.valueOf(flightEntity.getCompany().getComments().stream()
+    private Float companyRating(FlightEntity flightEntity) {
+        var ratingSum = Float.valueOf(flightEntity.getCompany().getComments().stream()
                 .map(CommentEntity::getRating)
                 .mapToInt(d -> d)
                 .sum());
@@ -212,6 +217,7 @@ public class OfferServiceImpl implements OfferUseCases {
         }
         else {
             ratingSum = ratingSum / flightEntity.getCompany().getComments().size();
+            ratingSum = new BigDecimal(ratingSum).setScale(2, RoundingMode.HALF_UP).floatValue();
         }
         return ratingSum;
     }

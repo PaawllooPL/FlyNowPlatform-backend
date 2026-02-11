@@ -24,7 +24,7 @@ public class OfferDetailsDTO {
     private String imageFilename;
     private Integer eventOrganizerId;
     private String eventOrganizerName;
-    private Integer eventOrganizerRating;
+    private Float eventOrganizerRating;
     private List<CommentDTO> comments;
     private Boolean canBuy;
     private Boolean canComment;

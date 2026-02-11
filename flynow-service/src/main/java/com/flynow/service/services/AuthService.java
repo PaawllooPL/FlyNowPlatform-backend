@@ -1,8 +1,6 @@
 package com.flynow.service.services;
 
-import com.flynow.domain.models.Role;
-import com.flynow.domain.models.RoleEnum;
-import com.flynow.domain.models.User;
+import com.flynow.domain.models.user.User;
 import com.flynow.repository.entities.RoleEntity;
 import com.flynow.repository.entities.UserEntity;
 import com.flynow.repository.repositories.jpa.RoleJpaRepository;
@@ -13,18 +11,14 @@ import com.flynow.service.models.AuthenticationResponse;
 import com.flynow.service.models.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -47,10 +41,12 @@ public class AuthService {
         for(var role : entityRoles) {
             logger.debug("Role: {}", role.getName());
         }
+
         UserEntity userEntity = userMapper.toEntityWithExistingRoles(user, entityRoles);
         logger.debug("Mapped userEntity: {}, {}, {}, {}, first role: {}", userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getPasswordHash(), userEntity.getAccountRoles().get(0).getName());
         userJpaRepository.save(userEntity);
         logger.debug("Saved userEntity");
+
         var userDetails = new UserDetailsImpl(userEntity);
         var jwtToken = jwtService.generateToken(userDetails);
         var refreshToken = jwtService.generateRefresh(new HashMap<>(), userDetails);

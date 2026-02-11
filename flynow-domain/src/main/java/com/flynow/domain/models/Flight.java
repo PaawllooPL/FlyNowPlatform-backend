@@ -1,8 +1,8 @@
 package com.flynow.domain.models;
 
-import java.time.Duration;
+import com.flynow.domain.models.user.User;
+
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class Flight {

@@ -21,7 +21,7 @@ public class OrganizerOfferDetailsDTO {
     private String imageFilename;
     private Integer eventOrganizerId;
     private String eventOrganizerName;
-    private Integer eventOrganizerRating;
+    private Float eventOrganizerRating;
     private String address;
     private String voivodeship;
     private LocalDateTime flightDate;

@@ -1,5 +1,6 @@
-package com.flynow.domain.models;
+package com.flynow.domain.models.user;
 
+import com.flynow.domain.models.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

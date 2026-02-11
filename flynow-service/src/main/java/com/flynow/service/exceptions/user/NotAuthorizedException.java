@@ -1,4 +1,4 @@
-package com.flynow.service.exceptions;
+package com.flynow.service.exceptions.user;
 
 public class NotAuthorizedException extends RuntimeException {
     public NotAuthorizedException() {super("Unauthorized");}

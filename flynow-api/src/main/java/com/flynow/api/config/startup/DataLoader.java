@@ -2,6 +2,7 @@ package com.flynow.api.config.startup;
 
 import com.flynow.domain.models.*;
 import com.flynow.domain.models.company.Company;
+import com.flynow.domain.models.user.User;
 import com.flynow.repository.entities.CommentEntity;
 import com.flynow.repository.entities.FlightEntity;
 import com.flynow.repository.entities.FlightPictureEntity;
@@ -76,7 +77,7 @@ public class DataLoader implements CommandLineRunner {
                 var userAdam = userJpaRepository.findByEmail("adam@gmail.com").get();
 
                 var flights = List.of(
-                    FlightEntity.of(null, LocalDateTime.now().minusWeeks(3), 45, 399, 5,
+                    FlightEntity.of(null, LocalDateTime.now().minusWeeks(1), 45, 399, 5,
                             "Przelot widokowy awionetką nad Bieszczadami – cisza i piękno natury!",
                             "Przeżyj magiczne chwile lecąc nad jednym z najdzikszych i najpiękniejszych regionów Polski – Bieszczadami! " +
                                     "Nasza oferta obejmuje lot widokowy awionetką startującą z lotniska w Ustrzykach Dolnych. " +
@@ -86,11 +87,11 @@ public class DataLoader implements CommandLineRunner {
                             List.of(
                                     UserFlightEntity.of(null, userKuba, true),
                                     UserFlightEntity.of(null, userKacper, true),
-                                    UserFlightEntity.of(null, userMarek, true)
+                                    UserFlightEntity.of(null, userMarek, false)
                             ),
                             awionetka_type, FlightPictureEntity.of(null, "zdjecie_1.jpg")
                     ),
-                    FlightEntity.of(null, LocalDateTime.now().plusWeeks(1), 90, 349, 6,
+                    FlightEntity.of(null, LocalDateTime.now().minusDays(2), 90, 349, 6,
                             "Przelot widokowy helikopterem nad Mazurami – widoki z nieba!"
                             ,"Wzbicie się w przestworza nad jednym z najpiękniejszych regionów Polski – Mazurami! " +
                                     "Nasza oferta obejmuje przelot widokowy helikopterem z lotniska w Giżycku. " +
@@ -150,7 +151,7 @@ public class DataLoader implements CommandLineRunner {
                             ),
                             helikopter_type, FlightPictureEntity.of(null, "zdjecie_5.jpg")
                     ),
-                    FlightEntity.of(null, LocalDateTime.now().plusDays(5), 25, 220, 3,
+                    FlightEntity.of(null, LocalDateTime.now().plusDays(6), 25, 220, 3,
                             "Podniebna przygoda w awionetce",
                             "Wzbogać swoje życie o wyjątkowe wspomnienia dzięki podniebnej przygodzie awionetką! " +
                                     "Podziwiaj zapierające dech w piersiach widoki z lotu ptaka, ucząc się jednocześnie podstaw pilotażu. " +
@@ -161,7 +162,7 @@ public class DataLoader implements CommandLineRunner {
                                     UserFlightEntity.of(null, userKuba, false),
                                     UserFlightEntity.of(null, userKacper, false)
                             ),
-                            helikopter_type, FlightPictureEntity.of(null, "zdjecie_5.jpg")
+                            helikopter_type, FlightPictureEntity.of(null, "zdjecie_6.jpg")
                     ));
 
                 flightJpaRepository.saveAll(flights);
@@ -169,7 +170,6 @@ public class DataLoader implements CommandLineRunner {
                 company.getComments().addAll(List.of(
                         CommentEntity.of(null, 4,"Całkiem przyjemny lot, ale siedzenie było trochę twarde.", userKuba),
                         CommentEntity.of(null, 5,"Mój pierwszy lot, było super", userKacper),
-                        CommentEntity.of(null, 5,"Super widoki, polecam każdemu!", userMarek),
 
                         CommentEntity.of(null, 4, "Piękna okolica, ale wolałbym więcej czasu w powietrzu.", userKacper),
                         CommentEntity.of(null, 5, "Pilot był bardzo profesjonalny, czułem się bezpiecznie.", userMarek),
