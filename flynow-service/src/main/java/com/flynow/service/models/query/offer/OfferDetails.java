@@ -1,0 +1,29 @@
+package com.flynow.service.models.query.offer;
+
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Builder
+@Getter
+public class OfferDetails {
+
+    private Integer flightId;
+    private String title;
+    private String description;
+    private Integer pricePerPerson;
+    private Integer remainingSeats;
+    private String aircraftType;
+    private String imageFilename;
+    private Integer eventOrganizerId;
+    private String eventOrganizerName;
+    private Float eventOrganizerRating;
+    private List<OfferComment> comments;
+    private Boolean canBuy;
+    private Boolean canComment;
+    private String address;
+    private String voivodeship;
+    private LocalDateTime flightDate;
+}

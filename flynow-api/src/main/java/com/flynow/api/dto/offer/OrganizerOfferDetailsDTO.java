@@ -1,16 +1,14 @@
 package com.flynow.api.dto.offer;
 
-import com.flynow.domain.models.offer.OrganizerOfferDetails;
-import lombok.Builder;
+import com.flynow.service.models.query.offer.OrganizerOfferDetails;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
-@Builder
+@AllArgsConstructor
 public class OrganizerOfferDetailsDTO {
     private Integer flightId;
     private String title;
@@ -27,25 +25,21 @@ public class OrganizerOfferDetailsDTO {
     private LocalDateTime flightDate;
     private List<OfferClientDTO> clients;
 
-    public static OrganizerOfferDetailsDTO fromDomain(OrganizerOfferDetails offerDetails) {
-
-        var clientsDto = offerDetails.getClients().stream().map(OfferClientDTO::fromDomain).toList();
-
-        return OrganizerOfferDetailsDTO.builder()
-                .flightId(offerDetails.getFlightId())
-                .title(offerDetails.getTitle())
-                .description(offerDetails.getDescription())
-                .pricePerPerson(offerDetails.getPricePerPerson())
-                .remainingSeats(offerDetails.getRemainingSeats())
-                .aircraftType(offerDetails.getAircraftType())
-                .imageFilename(offerDetails.getImageFilename())
-                .eventOrganizerId(offerDetails.getEventOrganizerId())
-                .eventOrganizerName(offerDetails.getEventOrganizerName())
-                .eventOrganizerRating(offerDetails.getEventOrganizerRating())
-                .address(offerDetails.getAddress())
-                .voivodeship(offerDetails.getVoivodeship())
-                .flightDate(offerDetails.getFlightDate())
-                .clients(clientsDto)
-                .build();
+    public static OrganizerOfferDetailsDTO from(OrganizerOfferDetails offerDetails) {
+        return new OrganizerOfferDetailsDTO(
+                offerDetails.getFlightId(),
+                offerDetails.getTitle(),
+                offerDetails.getDescription(),
+                offerDetails.getPricePerPerson(),
+                offerDetails.getRemainingSeats(),
+                offerDetails.getAircraftType(),
+                offerDetails.getImageFilename(),
+                offerDetails.getEventOrganizerId(),
+                offerDetails.getEventOrganizerName(),
+                offerDetails.getEventOrganizerRating(),
+                offerDetails.getAddress(),
+                offerDetails.getVoivodeship(),
+                offerDetails.getFlightDate(),
+                offerDetails.getClients().stream().map(OfferClientDTO::from).toList());
     }
 }

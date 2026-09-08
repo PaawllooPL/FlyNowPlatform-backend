@@ -3,7 +3,6 @@ package com.flynow.api.config.security;
 import com.flynow.api.config.security.jwt.JwtAuthenticationFilter;
 import com.flynow.domain.models.RoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,8 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -48,8 +45,8 @@ public class SecurityConfig {
                 .anonymous(AnonymousConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-//                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+//                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     corsConfiguration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     corsConfiguration.setAllowCredentials(true);

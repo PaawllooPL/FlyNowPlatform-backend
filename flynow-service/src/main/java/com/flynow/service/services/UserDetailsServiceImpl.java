@@ -1,22 +1,22 @@
 package com.flynow.service.services;
 
+import com.flynow.service.exceptions.user.UserNotFoundException;
 import com.flynow.service.models.UserDetailsImpl;
-import com.flynow.repository.repositories.jpa.UserJpaRepository;
+import com.flynow.service.repository.query.UserQueryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserJpaRepository userJpaRepository;
+    private UserQueryRepository userQueryRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userJpaRepository
+    public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
+        return userQueryRepository
                 .findByEmail(email)
                 .map(UserDetailsImpl::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

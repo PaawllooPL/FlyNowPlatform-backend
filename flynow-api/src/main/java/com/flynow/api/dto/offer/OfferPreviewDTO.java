@@ -1,15 +1,13 @@
 package com.flynow.api.dto.offer;
 
-import com.flynow.domain.models.offer.OfferPreview;
-import lombok.Builder;
+import com.flynow.service.models.query.offer.OfferPreview;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@Builder
+@AllArgsConstructor
 public class OfferPreviewDTO {
 
     private Integer flightId;
@@ -21,16 +19,15 @@ public class OfferPreviewDTO {
     private LocalDateTime flightDate;
     private String imageFilename;
 
-    public static OfferPreviewDTO fromDomain(OfferPreview offerPreview) {
-        return OfferPreviewDTO.builder()
-                .flightId(offerPreview.getFlightId())
-                .title(offerPreview.getTitle())
-                .pricePerPerson(offerPreview.getPricePerPerson())
-                .aircraftType(offerPreview.getAircraftType())
-                .address(offerPreview.getAddress())
-                .voivodeship(offerPreview.getVoivodeship())
-                .flightDate(offerPreview.getFlightDate())
-                .imageFilename(offerPreview.getImageFilename())
-                .build();
+    public static OfferPreviewDTO from(OfferPreview offerPreview) {
+        return new OfferPreviewDTO(
+                offerPreview.getFlightId(),
+                offerPreview.getTitle(),
+                offerPreview.getPricePerPerson(),
+                offerPreview.getAircraftType(),
+                offerPreview.getAddress(),
+                offerPreview.getVoivodeship(),
+                offerPreview.getFlightDate(),
+                offerPreview.getImageFilename());
     }
 }

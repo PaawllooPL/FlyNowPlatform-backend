@@ -1,6 +1,6 @@
 package com.flynow.api.dto.offer;
 
-import com.flynow.domain.models.offer.CreateOffer;
+import com.flynow.service.commands.CreateOfferCommand;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,9 +22,9 @@ public class CreateOfferDTO {
     private String voivodeship;
     private MultipartFile image;
 
-    public CreateOffer toDomain() {
+    public CreateOfferCommand toCommand() {
         try {
-            return CreateOffer.builder()
+            return CreateOfferCommand.builder()
                 .title(title)
                 .description(description)
                 .pricePerPerson(pricePerPerson)

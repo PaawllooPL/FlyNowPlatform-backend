@@ -9,5 +9,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class Role {
+    private Integer id;
     private RoleEnum name;
 }

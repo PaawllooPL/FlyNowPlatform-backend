@@ -1,9 +1,11 @@
 package com.flynow.service.mappers;
 
-import com.flynow.domain.models.company.Company;
-import com.flynow.domain.models.company.CreateCompany;
-import com.flynow.repository.entities.CompanyEntity;
-import com.flynow.repository.entities.UserEntity;
+// COMMENTED OUT — moved to flynow-infrastructure (depends on infrastructure entities, was placed in service by mistake).
+// Kept here as a placeholder so the package and historical code are not lost.
+/*
+import com.flynow.domain.models.Company;
+import com.flynow.infrastructure.entities.CompanyEntity;
+import com.flynow.infrastructure.entities.UserEntity;
 
 public class CompanyMapper {
 
@@ -11,17 +13,17 @@ public class CompanyMapper {
     public static Company toDomain(CompanyEntity entity) {
         return Company.builder()
                 .name(entity.getName())
-                .tin(entity.getTin())
+                .TIN(entity.getTin())
                 .address(entity.getAddress())
-                .comments(entity.getComments().stream().map(CommentMapper::toDomain).toList())
                 .build();
     }
-    public static CompanyEntity toNewEntityWithExistingUser(CreateCompany createCompany, UserEntity user) {
+    public static CompanyEntity toNewEntityWithExistingUser(Company newCompany, UserEntity user) {
         return CompanyEntity.builder()
                 .organizerAccount(user)
-                .name(createCompany.getName())
-                .tin(createCompany.getTIN())
-                .address(createCompany.getAddress())
+                .name(newCompany.getName())
+                .tin(newCompany.getTIN())
+                .address(newCompany.getAddress())
                 .build();
     }
 }
+*/

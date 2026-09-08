@@ -21,9 +21,10 @@
 
     <modules>
         <module>flynow-domain</module>
-        <module>flynow-repository</module>
+        <module>flynow-infrastructure</module>
         <module>flynow-service</module>
         <module>flynow-api</module>
+        <module>flynow-application</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

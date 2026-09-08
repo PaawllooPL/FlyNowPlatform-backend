@@ -1,14 +1,22 @@
 package com.flynow.domain.models;
 
-import com.flynow.domain.models.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+@Getter
+@AllArgsConstructor(staticName = "of")
 public class Flight {
+    private Integer id;
     private LocalDateTime flightDate;
     private Integer flightDuration;
     private Integer pricePerPerson;
+    private Integer totalSeats;
+    private String title;
     private String description;
-    private List<User> users;
+    private String address;
+    private VoivodeshipEnum voivodeship;
+    private Integer companyId;
+    private Integer aircraftTypeId;
 }

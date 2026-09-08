@@ -1,8 +1,8 @@
 package com.flynow.api.controllers;
 
 import com.flynow.api.dto.company.CreateCompanyDTO;
-import com.flynow.domain.interfaces.usecases.CompanyUseCases;
-import com.flynow.domain.models.company.CreateCompany;
+import com.flynow.service.commands.CreateCompanyCommand;
+import com.flynow.service.usecases.CompanyUseCases;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +26,8 @@ public class CompanyController {
 
     @PostMapping(value = COMPANY_CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createCompany(@ModelAttribute final CreateCompanyDTO createCompanyDTO) {
-        CreateCompany createCompany = createCompanyDTO.toDomain();
-        companyUseCases.createCompany(createCompany);
+        CreateCompanyCommand command = new CreateCompanyCommand(createCompanyDTO.getName(), createCompanyDTO.getTIN(), createCompanyDTO.getAddress());
+        companyUseCases.createCompany(command);
         return ResponseEntity.status(HttpStatus.CREATED).body("Stworzono firme (konto organizatora)");
     }
 }

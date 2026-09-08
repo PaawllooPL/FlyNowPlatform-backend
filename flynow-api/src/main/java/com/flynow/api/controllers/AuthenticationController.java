@@ -1,12 +1,13 @@
 package com.flynow.api.controllers;
 
 
+import com.flynow.api.dto.user.LoginUserDTO;
 import com.flynow.api.dto.user.RegisterUserDTO;
-import com.flynow.domain.models.RoleEnum;
-import com.flynow.domain.models.user.User;
-import com.flynow.service.models.AuthenticationRequest;
-import com.flynow.service.models.AuthenticationResponse;
+import com.flynow.service.commands.RegisterUserCommand;
+import com.flynow.service.models.command.AuthenticationCommand;
+import com.flynow.service.models.result.AuthenticationTokens;
 import com.flynow.service.services.AuthService;
+import com.flynow.service.usecases.UserUseCases;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,11 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
 
 import static com.flynow.api.ApiPathSegments.*;
 
@@ -28,27 +25,20 @@ import static com.flynow.api.ApiPathSegments.*;
 public class AuthenticationController {
 
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
+    private final UserUseCases userUseCases;
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @PostMapping(value = AUTHENTICATION_REGISTER/*, headers = MediaType.APPLICATION_JSON_VALUE*/)
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody final RegisterUserDTO registerUserDTO) {
-        try {
+    public ResponseEntity<AuthenticationTokens> register(@RequestBody final RegisterUserDTO registerUserDTO) {
             logger.debug("Starting /register endpoint");
-            var user = User.of(registerUserDTO.getUsername(), registerUserDTO.getEmail(),
-                    passwordEncoder.encode(registerUserDTO.getPassword()), new Date(), List.of(RoleEnum.user));
-            AuthenticationResponse authenticationResponse = authService.register(user);
-            return ResponseEntity.ok(authenticationResponse);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            var authenticationResponse = userUseCases.register(new RegisterUserCommand(registerUserDTO.getUsername(), registerUserDTO.getEmail(), registerUserDTO.getPassword()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(authenticationResponse);
         }
-    }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestParam("token") String refreshToken) {
+    public ResponseEntity<AuthenticationTokens> refresh(@RequestParam("token") String refreshToken) {
         try {
-            AuthenticationResponse res = authService.refreshToken(refreshToken);
+            AuthenticationTokens res = authService.refreshToken(refreshToken);
             return ResponseEntity.ok(res);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -71,10 +61,11 @@ public class AuthenticationController {
         }
     }
     @PostMapping(AUTHENTICATION_LOGIN)
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationTokens> authenticate(@RequestBody LoginUserDTO request) {
         try {
-            logger.debug("Starting /login endpoint. email: {} password: {}", authenticationRequest.getEmail(), authenticationRequest.getPassword());
-            AuthenticationResponse res = authService.authenticate(authenticationRequest);
+            logger.debug("Starting /login endpoint. email: {} password: {}", request.getEmail(), request.getPassword());
+            var authCommand = new AuthenticationCommand(request.getEmail(), request.getPassword());
+            AuthenticationTokens res = authService.authenticate(authCommand);
             return ResponseEntity.ok(res);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
