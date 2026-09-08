@@ -1,13 +1,12 @@
 package com.flynow.api.controllers;
 
-import com.flynow.service.exceptions.*;
-import com.flynow.service.exceptions.flight.FlightNotFoundException;
+import com.flynow.service.exceptions.AircraftTypeNotFoundException;
+import com.flynow.service.exceptions.BadRequestException;
 import com.flynow.service.exceptions.comment.CommentNotAllowedException;
+import com.flynow.service.exceptions.company.CompanyNotFoundException;
+import com.flynow.service.exceptions.flight.FlightNotFoundException;
 import com.flynow.service.exceptions.flight.SeatNotAvailableException;
-import com.flynow.service.exceptions.user.InsufficientPermissionsException;
-import com.flynow.service.exceptions.user.NotAuthenticatedException;
-import com.flynow.service.exceptions.user.NotAuthorizedException;
-import com.flynow.service.exceptions.user.UserNotFoundException;
+import com.flynow.service.exceptions.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotAuthorizedException.class)
     public ResponseEntity<String> notAuthorized(NotAuthorizedException e) {
         logger.debug(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized.");
+    }
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> userAlreadyExists(UserAlreadyExistsException e) {
+        logger.debug(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists.");
     }
     //----------------------------NOT FOUND--------------------------------------
     @ExceptionHandler(UserNotFoundException.class)

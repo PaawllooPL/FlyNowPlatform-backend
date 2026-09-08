@@ -1,20 +1,13 @@
 package com.flynow.api.config.security;
 
-import com.flynow.repository.repositories.jpa.RoleJpaRepository;
-import com.flynow.repository.repositories.jpa.UserJpaRepository;
-import com.flynow.service.services.AuthService;
-import com.flynow.service.services.JwtService;
-import com.flynow.service.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,9 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserJpaRepository userJpaRepository;
-    private final RoleJpaRepository roleJpaRepository;
-    private final AuthenticationConfiguration authenticationConfiguration;
+//    private final AuthenticationConfiguration authenticationConfiguration;
 //    @Bean
 //    public AuthService authService(JwtService jwtService) {
 //        return new AuthService(userJpaRepository, roleJpaRepository, passwordEncoder(), jwtService, authenticationManager(authenticationConfiguration));

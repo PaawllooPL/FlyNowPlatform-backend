@@ -1,8 +1,11 @@
 package com.flynow.service.mappers;
 
+// COMMENTED OUT — moved to flynow-infrastructure (depends on infrastructure entities, was placed in service by mistake).
+// Kept here as a placeholder so the package and historical code are not lost.
+/*
 import com.flynow.domain.models.Comment;
-import com.flynow.repository.entities.CommentEntity;
-import com.flynow.repository.entities.UserEntity;
+import com.flynow.infrastructure.entities.CommentEntity;
+import com.flynow.infrastructure.entities.UserEntity;
 
 public class CommentMapper {
     public static Comment toDomain(CommentEntity commentEntity) {
@@ -17,3 +20,4 @@ public class CommentMapper {
         return CommentEntity.of(null, comment.getRating(), comment.getContent(), userEntity);
     }
 }
+*/

@@ -1,54 +1,56 @@
 package com.flynow.service.services;
 
-import com.flynow.domain.interfaces.usecases.CompanyUseCases;
+import com.flynow.domain.models.Company;
 import com.flynow.domain.models.RoleEnum;
-import com.flynow.domain.models.company.CreateCompany;
-import com.flynow.repository.entities.CompanyEntity;
-import com.flynow.repository.entities.RoleEntity;
-import com.flynow.repository.entities.UserEntity;
-import com.flynow.repository.repositories.jpa.CompanyJpaRepository;
-import com.flynow.repository.repositories.jpa.RoleJpaRepository;
-import com.flynow.repository.repositories.jpa.UserJpaRepository;
-import com.flynow.service.exceptions.BadRequestException;
+import com.flynow.domain.models.User;
+import com.flynow.service.commands.CreateCompanyCommand;
+import com.flynow.service.exceptions.company.CompanyAlreadyExistsException;
 import com.flynow.service.exceptions.user.NotAuthenticatedException;
 import com.flynow.service.exceptions.user.UserNotFoundException;
-import com.flynow.service.mappers.CompanyMapper;
 import com.flynow.service.models.UserDetailsImpl;
+import com.flynow.service.repository.command.CompanyCommandRepository;
+import com.flynow.service.repository.command.UserCommandRepository;
+import com.flynow.service.repository.query.CompanyQueryRepository;
+import com.flynow.service.repository.query.UserQueryRepository;
+import com.flynow.service.usecases.CompanyUseCases;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyUseCases {
 
-    private final UserJpaRepository userJpaRepository;
-    private final CompanyJpaRepository companyJpaRepository;
-    private final RoleJpaRepository roleJpaRepository;
+    private final UserQueryRepository userQueryRepository;
+    private final UserCommandRepository userCommandRepository;
+    private final CompanyQueryRepository companyQueryRepository;
+    private final CompanyCommandRepository companyCommandRepository;
+
     private final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
-    @Transactional
+
     @Override
-    public void createCompany(CreateCompany createCompany) {
+    public void createCompany(CreateCompanyCommand command) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null) {
-            logger.debug("Authentication is null");
+        if(authentication == null || !authentication.isAuthenticated()) {
+            logger.debug("[REJECTED] Company create: Authentication is null.");
             throw new NotAuthenticatedException();
         }
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        companyJpaRepository.findByOrganizerAccountId(userDetails.getUserEntity().getId())
-                .ifPresent((company) -> {throw new BadRequestException("User is already organizer");});
 
-        UserEntity organizerEntity = userJpaRepository.findById(userDetails.getUserEntity().getId())
+        if(companyQueryRepository.existsByOrganizerId(userDetails.getId()))
+                throw new CompanyAlreadyExistsException("User is already organizer");
+
+        User user = userQueryRepository.findById(userDetails.getId())
                 .orElseThrow(() -> new UserNotFoundException(
-                        String.format("user with id %d not found", userDetails.getUserEntity().getId())));
-        RoleEntity organizerEntityRole = roleJpaRepository.findByName(RoleEnum.organizer).get();
+                        String.format("user with id %d not found", userDetails.getId())));
 
-        organizerEntity.getAccountRoles().add(organizerEntityRole);
-        CompanyEntity companyEntity = CompanyMapper.toNewEntityWithExistingUser(createCompany, organizerEntity);
-        logger.debug("Created company {}. Organizer id: {}", companyEntity.getName(), organizerEntity.getId());
-        companyJpaRepository.save(companyEntity);
+        user.getRoles().add(RoleEnum.organizer);
+
+        Company company = Company.of(null, userDetails.getId(), command.name(), command.TIN(), command.address());
+
+        companyCommandRepository.save(company);
+        userCommandRepository.save(user);
+        logger.debug("Created company {}. Organizer id: {}", company.getName(), user.getId());
     }
 }

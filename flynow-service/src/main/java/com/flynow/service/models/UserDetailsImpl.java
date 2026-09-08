@@ -1,38 +1,38 @@
 package com.flynow.service.models;
 
-import com.flynow.repository.entities.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.flynow.domain.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@RequiredArgsConstructor
-@Getter
-public class UserDetailsImpl implements UserDetails {
+public record UserDetailsImpl(User user) implements UserDetails {
 
-    private final UserEntity userEntity;
-
+    public Integer getId() {return user.getId();}
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userEntity
-                        .getAccountRoles()
-                        .stream()
-                        .map(role -> role.getName().toString())
-                        .map(SimpleGrantedAuthority::new)
+        return user
+                .getRoles()
+                .stream()
+                .map(Enum::name)
+                .map(SimpleGrantedAuthority::new)
                 .toList();
     }
 
     @Override
     public String getPassword() {
-        return userEntity.getPasswordHash();
+        return user.getPasswordHash();
     }
 
+    /**
+     * Spring Security's {@code UserDetails.getUsername()} is the principal
+     * identifier used during authentication. This codebase uses email as the
+     * login handle, so the JWT subject and {@code loadUserByUsername} lookup
+     * are email-based. Use {@link #getActualUsername()} for the display name.
+     */
     @Override
-    public String getUsername() {
-        return userEntity.getEmail();
-    }
+    public String getUsername() { return user.getEmail(); }
+
+    public String getActualUsername() { return user.getUsername(); }
 }

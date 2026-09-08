@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class AircraftType {
+    private Integer id;
     private String name;
 }

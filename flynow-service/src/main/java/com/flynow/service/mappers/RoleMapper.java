@@ -1,8 +1,11 @@
 package com.flynow.service.mappers;
 
+// COMMENTED OUT — moved to flynow-infrastructure (depends on infrastructure entities, was placed in service by mistake).
+// Kept here as a placeholder so the package and historical code are not lost.
+/*
 import com.flynow.domain.models.Role;
 import com.flynow.domain.models.RoleEnum;
-import com.flynow.repository.entities.RoleEntity;
+import com.flynow.infrastructure.entities.RoleEntity;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,3 +20,4 @@ public class RoleMapper {
         return RoleEnum.valueOf(roleEntity.getName().toString());
     }
 }
+*/

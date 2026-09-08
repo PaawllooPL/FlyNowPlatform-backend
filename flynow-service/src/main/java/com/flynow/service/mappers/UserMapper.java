@@ -1,8 +1,11 @@
 package com.flynow.service.mappers;
 
-import com.flynow.domain.models.user.User;
-import com.flynow.repository.entities.RoleEntity;
-import com.flynow.repository.entities.UserEntity;
+// COMMENTED OUT — moved to flynow-infrastructure (depends on infrastructure entities, was placed in service by mistake).
+// Kept here as a placeholder so the package and historical code are not lost.
+/*
+import com.flynow.domain.models.User;
+import com.flynow.infrastructure.entities.RoleEntity;
+import com.flynow.infrastructure.entities.UserEntity;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -28,3 +31,4 @@ public class UserMapper {
                 .build();
     }
 }
+*/

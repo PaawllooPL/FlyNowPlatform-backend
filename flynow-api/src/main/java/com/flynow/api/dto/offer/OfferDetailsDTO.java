@@ -1,18 +1,15 @@
 package com.flynow.api.dto.offer;
 
 import com.flynow.api.dto.comment.CommentDTO;
-import com.flynow.domain.models.Comment;
-import com.flynow.domain.models.offer.OfferDetails;
-import lombok.Builder;
+import com.flynow.service.models.query.offer.OfferDetails;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Getter
-@Setter
+@AllArgsConstructor
 public class OfferDetailsDTO {
 
     private Integer flightId;
@@ -32,26 +29,23 @@ public class OfferDetailsDTO {
     private String voivodeship;
     private LocalDateTime flightDate;
 
-    public static OfferDetailsDTO fromDomain(OfferDetails offerDetails, List<Comment> comments) {
-
-        var commentsDto = comments.stream().map(CommentDTO::fromDomain).toList();
-        return OfferDetailsDTO.builder()
-                .flightId(offerDetails.getFlightId())
-                .title(offerDetails.getTitle())
-                .description(offerDetails.getDescription())
-                .pricePerPerson(offerDetails.getPricePerPerson())
-                .remainingSeats(offerDetails.getRemainingSeats())
-                .aircraftType(offerDetails.getAircraftType())
-                .imageFilename(offerDetails.getImageFilename())
-                .eventOrganizerId(offerDetails.getEventOrganizerId())
-                .eventOrganizerName(offerDetails.getEventOrganizerName())
-                .eventOrganizerRating(offerDetails.getEventOrganizerRating())
-                .comments(commentsDto)
-                .canBuy(offerDetails.getCanBuy())
-                .canComment(offerDetails.getCanComment())
-                .address(offerDetails.getAddress())
-                .voivodeship(offerDetails.getVoivodeship())
-                .flightDate(offerDetails.getFlightDate())
-                .build();
+    public static OfferDetailsDTO from(OfferDetails offerDetails) {
+        return new OfferDetailsDTO(
+                offerDetails.getFlightId(),
+                offerDetails.getTitle(),
+                offerDetails.getDescription(),
+                offerDetails.getPricePerPerson(),
+                offerDetails.getRemainingSeats(),
+                offerDetails.getAircraftType(),
+                offerDetails.getImageFilename(),
+                offerDetails.getEventOrganizerId(),
+                offerDetails.getEventOrganizerName(),
+                offerDetails.getEventOrganizerRating(),
+                offerDetails.getComments().stream().map(CommentDTO::from).toList(),
+                offerDetails.getCanBuy(),
+                offerDetails.getCanComment(),
+                offerDetails.getAddress(),
+                offerDetails.getVoivodeship(),
+                offerDetails.getFlightDate());
     }
 }
