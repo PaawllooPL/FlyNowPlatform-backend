@@ -20,6 +20,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class FlynowApplication {
 
     public static void main(String[] args) {
+//        SpringApplication app = new SpringApplication(FlynowApplication.class);
+//        app.run(args);
+//        app.setEnvironmentPrefix("flynow");
         SpringApplication.run(FlynowApplication.class, args);
     }
 }
