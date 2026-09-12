@@ -8,5 +8,7 @@ FROM eclipse-temurin:22-jre
 WORKDIR /app
 
 COPY --from=build /app/flynow-application/target/*.jar app.jar
+COPY --from=build /app/images images
+
 
 CMD ["java", "-jar", "app.jar"]
