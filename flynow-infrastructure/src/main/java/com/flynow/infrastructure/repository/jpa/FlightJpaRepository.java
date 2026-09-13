@@ -60,15 +60,32 @@ public interface FlightJpaRepository extends JpaRepository<FlightEntity, Integer
             "order by f.flightDate asc")
     List<OfferPreviewDbProjection> findAllActiveWithSeatsLeft();
 
-    @Query("select " +
-            "f.id as flightId," +
-            "f.title as title," +
-            "f.pricePerPerson as pricePerPerson," +
-            "at.name as aircraftType," +
-            "f.address as address," +
-            "f.voivodeship as voivodeship," +
-            "f.flightDate as flightDate," +
-            "fp.pictureFileName as imageFilename " +
+//    @Query("select " +
+//            "f.id as flightId," +
+//            "f.title as title," +
+//            "f.pricePerPerson as pricePerPerson," +
+//            "at.name as aircraftType," +
+//            "f.address as address," +
+//            "f.voivodeship as voivodeship," +
+//            "f.flightDate as flightDate," +
+//            "fp.pictureFileName as imageFilename " +
+//            "from FlightEntity f " +
+//            "left join f.company " +
+//            "left join f.aircraftType at " +
+//            "left join FlightPictureEntity fp ON fp.flight = f " +
+//            "where f.flightDate >= :afterDate and " +
+//            "f.id in (SELECT uf.flight.id from UserFlightEntity uf" +
+//            "           WHERE uf.user.id = :clientId) " +
+//            "order by f.flightDate asc")
+    @Query("select new com.flynow.infrastructure.repository.models.offer.OfferPreviewDbProjection(" +
+            "f.id," +
+            "f.title," +
+            "f.pricePerPerson," +
+            "at.name," +
+            "f.address," +
+            "f.voivodeship," +
+            "f.flightDate," +
+            "fp.pictureFileName) " +
             "from FlightEntity f " +
             "left join f.company " +
             "left join f.aircraftType at " +
